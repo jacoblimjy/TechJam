@@ -1,6 +1,6 @@
 rag/.venv/
 rag/.env
-rag/.env.example
+# rag/.env.example
 rag/__pycache__/
 rag/qdrant_storage/
 rag/outputs/
