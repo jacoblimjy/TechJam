@@ -1,0 +1,12 @@
+rag/.venv/
+rag/.env
+rag/.env.example
+rag/__pycache__/
+rag/qdrant_storage/
+rag/outputs/
+
+web/.env.local
+web/.next/
+node_modules/
+
+note.txt

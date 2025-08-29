@@ -1,0 +1,193 @@
+## The Florida Senate
+
+## CS/CS/HB 3: Online Protections for Minors
+
+GENERAL BILL by Judiciary Committee ; Regulatory Reform &amp; Economic Development Subcommittee ; Tramont ; Overdorf ; Sirois ; McFarland ; Rayner ; (CO-INTRODUCERS) Anderson ; Bankson ; Barnaby ; Beltran ; Black ; Botana ; Brackett ; Buchanan ; Canady ; Caruso ; Chamberlin ; Chambliss ; Chaney ; Fabricio ; Garcia ; Gonzalez Pittman ; Gossett-Seidman ; Gregory ; Jacques ; Leek ; Lopez, V. ; Massullo ; McClain ; Melo ; Michael ; Mooney ; Payne ; Persons-Mulicka ; Plakon ; Plasencia ; Roth ; Salzman ; Snyder ; Steele ; Temple ; Trabulsy ; Truenow ; Tuck ; Waldron ; Yarkosky ; Yeager
+
+Online Protections for Minors; Requiring social media platforms to prohibit certain minors from creating new accounts; requiring social media platforms to terminate certain accounts and provide additional options for termination of such accounts; providing conditions under which social media platforms are required to prohibit certain minors from entering into contracts to become account holders; authorizing the Department of Legal Affairs to bring actions under the Florida Deceptive and Unfair Trade Practices Act for knowing or reckless violations; authorizing the department to issue and enforce civil investigative demands under certain circumstances, etc.
+
+Effective Date:
+
+1/1/2025
+
+Last Action:
+
+3/25/2024 - Chapter No. 2024-42; companion
+
+bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-54)
+
+Bill Text:
+
+PDF
+
+## Senate Committee References:
+
+1. Fiscal Policy (FP)
+
+## BILL HISTORY
+
+| Date      | Chamber   | Action                                                                                                                                                                                                                                                                           |
+|-----------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1/5/2024  | House     | • Filed                                                                                                                                                                                                                                                                          |
+| 1/9/2024  | House     | • Referred to Regulatory Reform &Economic Development Subcommittee • Referred to Judiciary Committee • Now in Regulatory Reform &Economic Development Subcommittee • Added to Regulatory Reform &Economic Development Subcommittee agenda • 1st Reading (Original Filed Version) |
+| 1/11/2024 | House     | • Favorable with CS by Regulatory Reform &Economic Development Subcommittee • Reported out of Regulatory Reform &Economic Development Subcommittee • Laid on Table under Rule 7.18(a) • CS Filed • 1st Reading (Committee Substitute 1)                                          |
+| 1/12/2024 | House     | • Referred to Judiciary Committee • Now in Judiciary Committee • Added to Judiciary Committee agenda                                                                                                                                                                             |
+| 1/17/2024 | House     | • Favorable with CS by Judiciary Committee • Reported out of Judiciary Committee                                                                                                                                                                                                 |
+| 1/18/2024 | House     | • Laid on Table under Rule 7.18(a) • CS Filed • Bill referred to House Calendar • Bill added to Special Order Calendar (1/23/2024) • 1st Reading (Committee Substitute 2)                                                                                                        |
+| 1/23/2024 | House     | • Read 2nd time • Placed on 3rd reading • Added to Third Reading Calendar
+|                                                          |
+| 1/24/2024 | House     | • Read 3rd time • CS passed; YEAS 119, NAYS 0                                                                                          |
+| 1/24/2024 | Senate    | • In Messages                                                                                                                          |
+| 1/25/2024 | Senate    | • Referred to Fiscal Policy • Received                                                                                                 |
+| 2/12/2024 | Senate    | • On Committee agenda-- Fiscal Policy, 02/15/24, 12:00 pm, 412 Knott Building --Temporarily Postponed                                  |
+| 2/15/2024 | Senate    | • Placed on Special Order Calendar, 02/21/24 --If Received                                                                             |
+| 3/1/2024  | Senate    | • Withdrawn from Fiscal Policy -SJ 575 • Placed on Calendar, on 2nd reading • Placed on Special Order Calendar, 03/04/24 -SJ 575       |
+| 3/4/2024  | Senate    | • Read 2nd time -SJ 622 • Amendment(s) adopted (961382) -SJ 622 • Read 3rd time -SJ 625 • CS passed as amended; YEAS 30 NAYS 5 -SJ 625 |
+| 3/4/2024  | House     | • In Messages                                                                                                                          |
+| 3/6/2024  | House     | • Added to Senate Message List • Amendment 961382 Concur • CS passed as amended; YEAS 109, NAYS 4 • Ordered engrossed, then enrolled   |
+| 3/21/2024 |           | • Signed by Officers and presented to Governor                                                                                         |
+| 3/25/2024 |           | • Approved by Governor • Chapter No. 2024-42; companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-54)                                |
+
+## POSTED 3/7/2024 AT 10:14 AM CS/CS/HB 3, ENROLLED (CURRENT BILL VERSION)
+
+## Related Bills (6)
+
+| Bill Number   | Subject                                                     | Filed By                                              | Relationship   | Last Action and Location                                                                          | Track Bills   |
+|---------------|-------------------------------------------------------------|-------------------------------------------------------|----------------|---------------------------------------------------------------------------------------------------|---------------|
+| H1491 (er)    | Pub. Rec./Investigations by the Department of Legal Affairs | Regulatory Reform & Economic Development Subcommittee | Linked         | Last Action: 4/3/2024 Chapter No. 2024-54; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42) |               |
+| H1 (er)       | Online Protections for Minors                               | Judiciary Committee     | Similar        | Last Action: 3/1/2024 Vetoed by Governor; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42); companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-2024-54) |               |
+| H1377 (er)    | Pub. Rec./Investigations by the Department of Legal Affairs | State Affairs Committee | Compare        | Last Action: 3/1/2024 Vetoed by Governor; companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-54), CS/CS/HB 3 (Ch.                                             |               |
+| S 454         | Protection of Minors on Social Media Platforms              | Garcia                  | Compare        | Last Action: 3/8/2024 S Died in Commerce and Tourism, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                     |               |
+| S 1788 (c1)   | Social Media Use for Minors                                 | Grall                   | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                            |               |
+| S 1792 (c1)   | Online Access to Materials Harmful to Minors                | Grall                   | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                            |               |
+
+## Citations - Statutes (3)
+
+|   Citation | Catchline   | Location in Bill Location In Bill Help   |
+|------------|-------------|------------------------------------------|
+|    501.174 |             | Page 3 (PDF)                             |
+|    501.174 |             | Page 12 (PDF)                            |
+|    501.174 |             | Page 19 (PDF)                            |
+
+## CS/CS/HB 3, ENGROSSED 1
+## Related Bills (8)
+| Bill Number   | Subject                                                          | Filed By                                              | Relationship   | Last Action and Location                                                                                                                                         | Track Bills   |
+|---------------|------------------------------------------------------------------|-------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| H1491 (er)    | Pub. Rec./Investigations by the Department of Legal Affairs      | Regulatory Reform & Economic Development Subcommittee | Linked         | Last Action: 4/3/2024 Chapter No. 2024-54; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                                |               |
+| S 1792 (c1)   | Online Access to Materials Harmful to Minors                     | Grall                                                 | Identical      | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                            |               |
+| H1 (er)       | Online Protections for Minors                                    | Judiciary Committee                                   | Compare        | Last Action: 3/1/2024 Vetoed by Governor; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42); companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-2024-54) |               |
+| H207          | Social Media Protection for Minors                               | Rayner, Sirois                                        | Compare        | Last Action: 3/8/2024 HDied on Second Reading Calendar                                                                                                           |               |
+| S 454         | Protection of Minors on Social Media Platforms                   | Garcia                                                | Compare        | Last Action: 3/8/2024 S Died in Commerce and Tourism, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                     |               |
+| S 1430        | Social Media Protection for Minors                               | Book                                                  | Compare        | Last Action: 3/8/2024 S Died in Judiciary                                                                                                                        |               |
+| S 1788 (c1)   | Social Media Use for Minors                                      | Grall                                                 | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                            |               |
+| S 1794        | Public Records/Investigations by the Department of Legal Affairs | Grall                                                 | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-54)                                                         |               |
+
+## Citations - Statutes (3)
+
+|   Citation | Catchline   | Location in Bill Location In Bill Help   |
+|------------|-------------|------------------------------------------|
+|    501.174 |             |                                          |
+|    501.174 |             | Page 2 (PDF)                             |
+|    501.174 |             |                                          |
+
+## POSTED 1/18/2024 AT 8:48 AM CS/CS/HB 3, COMMITTEE SUBSTITUTE 2
+
+Analyses: Fiscal Policy (Pre-Meeting) 2/13/2024 (PDF)
+
+## Related Bills (8)
+
+| Bill Number   | Subject                                                     | Filed By                                              | Relationship   | Last Action and Location                                                                                                                                         | Track Bills   |
+|---------------|-------------------------------------------------------------|-------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| H1491 (er)    | Pub. Rec./Investigations by the Department of Legal Affairs | Regulatory Reform & Economic Development Subcommittee | Linked         | Last Action: 4/3/2024 Chapter No. 2024-54; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                                |               |
+| S 1792 (c1)   | Online Access to Materials Harmful to Minors                | Grall                                                 | Identical      | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                            |               |
+| H1 (er)       | Online Protections for Minors                               | Judiciary Committee                                   | Compare        | Last Action: 3/1/2024 Vetoed by Governor; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42); companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-2024-54) |               |
+| H207          | Social Media Protection for Minors                          | Rayner, Sirois                                        | Compare        | Last Action: 3/8/2024 HDied on Second Reading Calendar                                                                                                           |               |
+| S 454         | Protection of Minors on Social Media Platforms              | Garcia                                                | Compare        | Last Action: 3/8/2024 S Died in Commerce and Tourism, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                     |               |
+| S 1430        | Social Media Protection for Minors                          | Book                                                  | Compare        | Last Action: 3/8/2024 S Died in Judiciary                                                                                                                        |               |
+| S 1788 (c1)   | Social Media Use for Minors                                      | Grall      | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)    |               |
+| S 1794        | Public Records/Investigations by the Department of Legal Affairs | Grall      | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-54) |               |
+
+## Committee Amendments (1)
+
+| Amendment                                                                               | Sponsor                | Filed              | Last Committee Action   | Format       |
+|-----------------------------------------------------------------------------------------|------------------------|--------------------|-------------------------|--------------|
+| 493094 - Amendment (Delete All) Delete everything after the enacting clause and insert: | Fiscal Policy (Hutson) | 2/14/2024 12:00 PM |                         | Web Page PDF |
+
+## Floor Amendments (1)
+
+| Amendment                                                                               | Sponsor   | Filed            | Last Floor Action      | Format       |
+|-----------------------------------------------------------------------------------------|-----------|------------------|------------------------|--------------|
+| 961382 - Amendment (Delete All) Delete everything after the enacting clause and insert: | Grall     | 3/1/2024 3:18 PM | House: Concur 3/6/2024 | Web Page PDF |
+
+## Floor Votes (3)
+
+| Date              | Chamber   | Result            |
+|-------------------|-----------|-------------------|
+| 1/24/2024 5:03 PM | House     | 119 Yeas - 0 Nays |
+| 3/4/2024 10:28 AM | Senate    | 30 Yeas - 5 Nays  |
+| 3/6/2024 6:16 PM  | House     | 109 Yeas - 4 Nays |
+
+## Citations - Statutes (1)
+
+|   Citation | Catchline   | Location in Bill Location In Bill Help   |
+|------------|-------------|------------------------------------------|
+|    501.174 |             | Page 2 (PDF)                             |
+
+## CS/HB 3, COMMITTEE SUBSTITUTE 1
+
+## Related Bills (8)
+
+| Bill Number   | Subject                                                          | Filed By                                              | Relationship   | Last Action and Location                                                                                                                                         | Track Bills   |
+|---------------|------------------------------------------------------------------|-------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| H1491 (c1)    | Pub. Rec./Investigations by the Department of Legal Affairs      | Regulatory Reform & Economic Development Subcommittee | Linked         | Last Action: 4/3/2024 Chapter No. 2024-54; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                                |               |
+| S 1792        | Online Access to Materials Harmful to Minors                     | Grall                                                 | Similar        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                            |               |
+| H1 (c1)       | Social Media Use for Minors                                      | Judiciary Committee                                   | Compare        | Last Action: 3/1/2024 Vetoed by Governor; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42); companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-2024-54) |               |
+| H207          | Social Media Protection for Minors                               | Rayner, Sirois                                        | Compare        | Last Action: 3/8/2024 HDied on Second Reading Calendar                                                                                                           |               |
+| S 454         | Protection of Minors on Social Media Platforms                   | Garcia                                                | Compare        | Last Action: 3/8/2024 S Died in Commerce and Tourism, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                     |               |
+| S 1430        | Social Media Protection for Minors                               | Book                                                  | Compare        | Last Action: 3/8/2024 S Died in Judiciary                                                                                                                        |               |
+| S 1788        | Age Verification for Social Media Platform Accounts              | Grall                                                 | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                            |               |
+| S 1794        | Public Records/Investigations by the Department of Legal Affairs | Grall                                                 | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-54)                                                         |               |
+
+## Committee Amendments (1)
+| Amendment | Sponsor | Filed | Last Committee Action | Format |
+|---|---|---|---|---|
+| 901561 - Amendment Remove line 72 and insert: | Tramont | 1/16/2024 3:20 PM | Adopted 1/17/2024 | PDF |
+
+## Citations - Statutes (1)
+
+| Citation | Catchline | Location in Bill |
+|---|---|---|
+| 501.1737 | | Page 1 (PDF) |
+POSTED 1/5/2024 AT 6:48 PM
+
+## HB 3, ORIGINAL FILED VERSION
+
+## Related Bills (8)
+
+| Bill Number   | Subject                                                     | Filed By                                              | Relationship   | Last Action and Location                                                                                                                                         | Track Bills   |
+|---------------|-------------------------------------------------------------|-------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| H1491         | Pub. Rec./Investigations by the Department of Legal Affairs | Regulatory Reform & Economic Development Subcommittee | Linked         | Last Action: 4/3/2024 Chapter No. 2024-54; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                                |               |
+| S 1792        | Online Access to Materials Harmful to Minors                | Grall                                                 | Similar        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                            |               |
+| H1            | Social Media Use for Minors                                 | Judiciary Committee                                   | Compare        | Last Action: 3/1/2024 Vetoed by Governor; companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42); companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-2024-54) |               |
+| H207          | Social Media Protection for Minors                          | Rayner, Sirois                                        | Compare        | Last Action: 3/8/2024 HDied on Second Reading Calendar                                                                                                           |               |
+| S 454         | Protection of Minors on Social Media Platforms              | Garcia                                                | Compare        | Last Action: 3/8/2024 S Died in Commerce and Tourism, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)                                                     |               |
+| S 1430        | Social Media Protection for Minors                               | Book       | Compare        | Last Action: 3/8/2024 S Died in Judiciary                                                                |               |
+| S 1788        | Age Verification for Social Media Platform Accounts              | Grall      | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 3 (Ch. 2024-42)    |               |
+| S 1794        | Public Records/Investigations by the Department of Legal Affairs | Grall      | Compare        | Last Action: 3/8/2024 S Died in Fiscal Policy, companion bill(s) passed, see CS/CS/HB 1491 (Ch. 2024-54) |               |
+
+## Committee Amendments (1)
+
+Of course. Here is the reconstructed table:
+
+| Amendment | Sponsor | Filed | Last Committee Action | Format |
+|---|---|---|---|---|
+| 427693 - Amendment<br>Remove lines 34-54 and insert: | Tramont | 1/10/2024<br><br>5:29 PM | Adopted without Objection 1/11/2024 | PDF |
+
+## Citations - Statutes (1)
+| Citation | Catchline | Location in Bill |
+|---|---|---|
+| 501.1737 | Age verification for online access to materials harmful to minors. | Page 1 (PDF) |
+
+Disclaimer: The information on this system is unverified. The journals or printed bills of the respective chambers should be consulted for official purposes.
+
+Copyright © 2000- 2025  State of Florida.

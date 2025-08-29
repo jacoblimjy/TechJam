@@ -1,0 +1,82 @@
+from __future__ import annotations
+import os
+from typing import Dict, Any
+
+from dotenv import load_dotenv
+from langchain_core.runnables import RunnablePassthrough, RunnableLambda
+from langchain_core.output_parsers import StrOutputParser
+from langchain.prompts import ChatPromptTemplate
+
+from rag.utils import format_docs_for_context, parse_json_safe
+from rag.retrieval import get_hybrid_retriever
+from rag.prompts import QA_SYSTEM, QA_USER, CLASSIFY_SYSTEM, CLASSIFY_USER
+
+# --- LLM: Groq ---
+from langchain_groq import ChatGroq
+
+load_dotenv()
+
+# Use GROQ_* vars; fall back to your previous OLLAMA_TEMPERATURE if present
+def _chat(json_mode: bool = False):
+    kwargs = {
+        "model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"),
+        "temperature": float(os.getenv("GROQ_TEMPERATURE", os.getenv("OLLAMA_TEMPERATURE", "0.2"))),
+        # "max_tokens": 2048,  # uncomment/tune if needed
+    }
+    if json_mode:
+        # Strongly nudge strict JSON on Groq (OpenAI-compatible param)
+        kwargs["model_kwargs"] = {"response_format": {"type": "json_object"}}
+    return ChatGroq(**kwargs)
+
+# ---------- QA CHAIN ----------
+def make_qa_chain(k: int = 5, mmr: bool = False):
+    """Input: a plain string question."""
+    retriever = get_hybrid_retriever(k=k, mmr=mmr)
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", QA_SYSTEM),
+        ("user", QA_USER),
+    ])
+    llm = _chat(json_mode=False)
+    parser = StrOutputParser()
+
+    def _gather(inputs: Dict[str, Any]) -> Dict[str, Any]:
+        q = inputs["question"]
+        docs = retriever.invoke(q)
+        return {"question": q, "context": format_docs_for_context(docs)}
+
+    chain = (
+        {"question": RunnablePassthrough()}
+        | RunnableLambda(_gather)
+        | prompt
+        | llm
+        | parser
+    )
+    return chain
+
+# ---------- CLASSIFY CHAIN ----------
+def make_classify_chain(k: int = 5, mmr: bool = False):
+    """Input: dict with keys: feature_text (str), rule_hits (list[str])"""
+    retriever = get_hybrid_retriever(k=k, mmr=mmr)
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", CLASSIFY_SYSTEM),
+        ("user", CLASSIFY_USER),
+    ])
+    llm = _chat(json_mode=True)  # JSON mode ON for strict output
+    parser = StrOutputParser()
+
+    def _prep(inputs: Dict[str, Any]) -> Dict[str, Any]:
+        ft = inputs["feature_text"]
+        rh = inputs.get("rule_hits", [])
+        docs = retriever.invoke(ft)
+        ctx = format_docs_for_context(docs)
+        return {"feature_text": ft, "rule_hits": rh, "context": ctx}
+
+    chain = (
+        RunnableLambda(lambda x: x)  # passthrough
+        | RunnableLambda(_prep)
+        | prompt
+        | llm
+        | parser
+        | parse_json_safe
+    )
+    return chain
