@@ -58,7 +58,7 @@ def make_qa_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = Non
     return chain
 
 # ---------- CLASSIFY CHAIN ----------
-def make_classify_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = None, use_few_shot: bool = True, max_positive: int = 1, max_negative: int = 1):
+def make_classify_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = None, use_few_shot: bool = True, max_positive: int = 3, max_negative: int = 2):
     """Input: dict with keys: feature_text (str), rule_hits (list[str]). Optionally filter retrieval by regions."""
     retriever = get_hybrid_retriever(k=k, mmr=mmr, regions=regions)
     
@@ -68,8 +68,6 @@ def make_classify_chain(k: int = 5, mmr: bool = False, regions: list[str] | None
         max_negative=max_negative,
         format_as_text=True
     ) if use_few_shot else ""
-    
-    print(examples_text)  # Debug: show examples text
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", CLASSIFY_SYSTEM),
