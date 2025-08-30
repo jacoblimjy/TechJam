@@ -6,7 +6,7 @@ export function ResultCard({ res }: { res: any }) {
 		res.needs_geo_logic === "yes"
 			? "bg-green-600"
 			: res.needs_geo_logic === "no"
-			? "bg-gray-600"
+			? "bg-red-600"
 			: "bg-yellow-600";
 
 	return (

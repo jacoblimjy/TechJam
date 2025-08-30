@@ -4,18 +4,18 @@ import { Badge, CopyButton, InfoTip } from "./Ui";
 
 function DecisionBadge({ v }: { v: string }) {
   const m = (v || "unclear").toLowerCase();
-  const bg = m === "yes" ? "bg-green-600" : m === "no" ? "bg-gray-700" : "bg-yellow-600";
+  const bg = m === "yes" ? "bg-green-600" : m === "no" ? "bg-red-600" : "bg-yellow-600";
   return <span className={`text-white text-xs px-2 py-1 rounded ${bg}`}>{m.toUpperCase()}</span>;
 }
 
 function ConfidenceBar({ c }: { c: number }) {
   const pct = Math.max(0, Math.min(100, Math.round((c || 0) * 100)));
   return (
-    <div className="flex items-center gap-2">
-      <div className="h-2 w-32 bg-gray-200 rounded">
-        <div className="h-2 bg-gray-800 rounded" style={{ width: `${pct}%` }} />
+    <div className="flex items-center gap-2" aria-label={`Confidence ${pct}%`}>
+      <div className="h-2 w-32 rounded bg-slate-700/70 border border-white/10">
+        <div className="h-2 rounded bg-sky-400" style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-xs text-gray-600">{pct}%</span>
+      <span className="text-xs text-slate-200">{pct}%</span>
     </div>
   );
 }
@@ -28,7 +28,7 @@ export default function DecisionSummary({ res }: { res: any }) {
   const regions: string[] = prov.regions_inferred || [];
   const filterUsed = prov.region_filter_used;
   return (
-    <div className="grid md:grid-cols-2 gap-4">
+    <div className="space-y-4">
       <div className="card p-4 space-y-3">
         <div className="flex items-center gap-3">
           <DecisionBadge v={res.needs_geo_logic} />

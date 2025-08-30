@@ -9,12 +9,24 @@ export default function FeatureGuide() {
         <li>See decision, confidence, and linked laws. Expand Provenance for the audit trail.</li>
       </ul>
       <h4 className="font-medium">Interpretation</h4>
-      <ul className="list-disc pl-5 text-sm space-y-1 text-slate-200">
-        <li><b>YES</b>: Likely needs geo‑specific logic.</li>
-        <li><b>NO</b>: No geo‑specific legal requirement found.</li>
-        <li><b>UNCLEAR</b>: Needs human review.</li>
-        <li><b>Confidence</b>: 0.20–0.95, higher when regions and cues align.</li>
-      </ul>
+      <div className="text-sm space-y-2 text-slate-200">
+        <div className="flex items-center gap-2">
+          <span className="text-white text-[10px] px-2 py-0.5 rounded bg-green-600">YES</span>
+          <span>Likely needs geo‑specific logic.</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-white text-[10px] px-2 py-0.5 rounded bg-red-600">NO</span>
+          <span>No geo‑specific legal requirement found.</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-white text-[10px] px-2 py-0.5 rounded bg-yellow-600">UNCLEAR</span>
+          <span>Needs human review.</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-white text-[10px] px-2 py-0.5 rounded bg-sky-600">Confidence</span>
+          <span>0.20–0.95, higher when regions and cues align.</span>
+        </div>
+      </div>
     </div>
   );
 }

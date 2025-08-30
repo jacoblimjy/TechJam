@@ -92,11 +92,11 @@ export default function BatchPanel() {
 			<button onClick={runBatch} className="btn-primary" disabled={loading || rows.trim().length === 0}>
 				{loading ? "Running..." : "Batch classify"}
 			</button>
-				{csv && (
-					<button onClick={downloadCSV} className="btn">
-						Download CSV
-					</button>
-				)}
+            {csv && (
+                <button onClick={downloadCSV} className="btn-accent">
+                    Download CSV
+                </button>
+            )}
 			</div>
 
 			{out && (

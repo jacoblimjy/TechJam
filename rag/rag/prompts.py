@@ -28,7 +28,7 @@ Return STRICT JSON only that matches this schema:
 
 {{
   "needs_geo_logic": "yes|no|unclear",
-  "reasoning": "short reasoning grounded in the provided context",
+  "reasoning": "comprehensive reasoning grounded in the provided context",
   "laws": [
     {{"name":"...", "region":"...", "article_or_section":"...", "source":"..."}}
   ],
@@ -55,7 +55,7 @@ Relevant Law Context (top-k):
 Respond with STRICT JSON only following this schema:
 {{
   "needs_geo_logic": "yes|no|unclear",
-  "reasoning": "short reasoning grounded in the provided context",
+  "reasoning": "comprehensive reasoning grounded in the provided context",
   "laws": [
     {{"name":"...", "region":"...", "article_or_section":"...", "source":"..."}}
   ],

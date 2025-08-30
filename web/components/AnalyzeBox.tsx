@@ -138,11 +138,11 @@ export default function AnalyzeBox() {
 				>
 					{loading ? "Analyzing..." : "Analyze"}
 				</button>
-				{res && (
-					<button onClick={downloadJSON} className="btn">
-						Download audit JSON
-					</button>
-				)}
+            {res && (
+                <button onClick={downloadJSON} className="btn-accent">
+                    Download audit JSON
+                </button>
+            )}
 			</div>
 
 			{error && <div className="text-sm text-red-600">{error}</div>}

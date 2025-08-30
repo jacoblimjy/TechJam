@@ -30,7 +30,7 @@ export function CopyButton({ text, label = "Copy" }: { text: string; label?: str
     } catch {}
   }
   return (
-    <button onClick={onCopy} className="text-xs px-2 py-1 rounded border">
+    <button onClick={onCopy} className="btn-accent text-xs px-2 py-1">
       {copied ? "Copied" : label}
     </button>
   );
