@@ -10,6 +10,7 @@ from langchain_core.documents import Document
 
 from rag.chains import make_qa_chain, make_classify_chain
 from rag.retrieval import get_hybrid_retriever
+from rag.semantic_cache import get_semantic_cache
 from api.schemas import (
     AskRequest, AskResponse,
     SearchRequest, SearchResponse, SearchDoc,
@@ -45,8 +46,21 @@ def health():
 @app.post("/ask", response_model=AskResponse)
 def ask(req: AskRequest):
     try:
+        # Get semantic cache instance
+        cache = get_semantic_cache()
+        
+        # Try to get cached response
+        cached_answer = cache.get(req.question)
+        if cached_answer is not None:
+            return AskResponse(answer=cached_answer)
+        
+        # No cache hit, process normally
         chain = make_qa_chain(k=req.k, mmr=req.mmr)
         answer: str = chain.invoke(req.question)
+        
+        # Cache the result
+        cache.set(req.question, answer)
+        
         return AskResponse(answer=answer)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -67,8 +81,24 @@ def search(req: SearchRequest):
 @app.post("/classify", response_model=ClassifyResponse)
 def classify(req: ClassifyRequest):
     try:
+        # Get semantic cache instance
+        cache = get_semantic_cache()
+        
+        # Create cache key from feature_text (main content to classify)
+        cache_key = f"classify:{req.feature_text}"
+        
+        # Try to get cached response
+        cached_result = cache.get(cache_key)
+        if cached_result is not None:
+            return ClassifyResponse(**cached_result)
+        
+        # No cache hit, process normally
         chain = make_classify_chain(k=req.k, mmr=req.mmr)
         out: Dict[str, Any] = chain.invoke({"feature_text": req.feature_text, "rule_hits": req.rule_hits})
+        
+        # Cache the result
+        cache.set(cache_key, out)
+        
         # Coerce to response model
         return ClassifyResponse(**out)
     except Exception as e:
@@ -96,5 +126,25 @@ def batch_classify(req: BatchClassifyRequest):
             flat_rows = [r.model_dump() for r in rows]
             payload["csv"] = rows_to_csv(flat_rows)
         return BatchClassifyResponse(**payload)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ---------- Cache Management ----------
+@app.get("/cache/stats")
+def cache_stats():
+    """Get semantic cache statistics."""
+    try:
+        cache = get_semantic_cache()
+        return cache.get_stats()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/cache/clear")
+def clear_cache():
+    """Clear the semantic cache."""
+    try:
+        cache = get_semantic_cache()
+        cache.clear()
+        return {"message": "Cache cleared successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

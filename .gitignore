@@ -1,5 +1,6 @@
 rag/.venv/
 rag/.env
+rag/.pyc
 rag/.env.example
 rag/__pycache__/
 rag/qdrant_storage/
