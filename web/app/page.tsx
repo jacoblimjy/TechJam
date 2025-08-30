@@ -11,7 +11,6 @@ export default function Page() {
                         <AnalyzeBox />
                     </section>
                     <section className="space-y-2">
-                        <h2 className="text-lg font-medium">Batch classify</h2>
                         <BatchPanel />
                     </section>
                 </div>

@@ -45,21 +45,37 @@ export default function AnalyzeBox() {
 		}
 	}
 
-	function setExample(kind: string) {
-		if (kind === "utah") {
-			setText("Curfew login blocker with ASL and GH for Utah minors\n\nTo comply with the Utah Social Media Regulation Act, we are implementing a curfew-based login restriction for users under 18. GH applies enforcement within Utah only.");
-			setAssume("US-UT");
-			setRules(["asl", "gh"]);
-		} else if (kind === "dsa") {
-			setText("Content visibility lock with NSP for EU DSA\n\nA soft Softblock applies to NSP-tagged content, restricted to EU region via GH.");
-			setAssume("EU/EEA");
-			setRules(["nsp", "gh"]);
-		} else if (kind === "fl") {
-			setText("Jellybean-based parental notifications for Florida regulation\n\nExtend parental notifications per Florida minors protections; IMT checks anomalies, BB models, and CDS logs.");
-			setAssume("US-FL");
-			setRules(["jellybean", "gh"]);
-		}
-	}
+    function setExample(kind: string) {
+        if (kind === "utah") {
+            setText(
+                "Curfew login blocker with ASL and GH for Utah minors\n\n" +
+                "To comply with the Utah Social Media Regulation Act, we are implementing a curfew-based login restriction for users under 18. " +
+                "The system uses ASL to detect minor accounts and routes enforcement through GH to apply only within Utah boundaries. " +
+                "The feature activates during restricted night hours and logs activity using EchoTrace for auditability. " +
+                "This allows parental control to be enacted without user-facing alerts, operating in ShadowMode during initial rollout."
+            );
+            setAssume("US-UT");
+            setRules(["asl", "gh"]);
+        } else if (kind === "ca_pf") {
+            setText(
+                "PF default toggle with NR enforcement for California teens\n\n" +
+                "As part of compliance with California’s SB976, the app will disable PF by default for users under 18 located in California. " +
+                "This default setting is considered NR to override, unless explicit parental opt-in is provided. " +
+                "Geo-detection is handled via GH, and rollout is monitored with FR logs. " +
+                "The design ensures minimal disruption while meeting the strict personalization requirements imposed by the law."
+            );
+            setAssume("US-CA");
+            setRules(["pf", "nr", "gh"]);
+        } else if (kind === "story") {
+            setText(
+                "Story resharing with content expiry\n\n" +
+                "Enable users to reshare stories from others, with auto-expiry after 48 hours. " +
+                "This feature logs resharing attempts with EchoTrace and stores activity under BB."
+            );
+            setAssume(null);
+            setRules([]);
+        }
+    }
 
 	function onRuleToggle(tag: string) {
 		setRules((prev) =>
@@ -82,8 +98,8 @@ export default function AnalyzeBox() {
 
 	return (
 		<div className="card p-5 space-y-4">
-			<div className="flex items-center justify-between">
-				<h2 className="text-lg font-medium">Single artifact analysis</h2>
+            <div className="flex items-center justify-between">
+                <h2 className="text-lg font-medium">Single Artifact Analysis</h2>
 				<div className="flex items-center gap-2">
 					<span className="text-xs text-slate-300">Assume region</span>
 					<select className="select" value={assume || ""} onChange={(e) => setAssume(e.target.value || null)}>
@@ -96,7 +112,7 @@ export default function AnalyzeBox() {
 			</div>
         <div className="flex items-center gap-2 text-xs text-slate-200">
           <Badge>Auto mode</Badge>
-          <span>no tags selected → auto‑detect rules</span>
+          <span>Leave rule_hits empty to auto‑detect.</span>
         </div>
 			<textarea
 				className="input h-48"
@@ -105,30 +121,35 @@ export default function AnalyzeBox() {
 				onChange={(e) => setText(e.target.value)}
 			/>
 				<div className="space-y-2">
-					<div className="text-xs text-slate-200">Sample rule tags:</div>
-					<div className="flex flex-wrap gap-2 items-center">
-						{["legal_cue", "asl", "gh", "lcp", "nsp", "echotrace", "redline"].map(
-							(t) => (
-								<button
-									key={t}
-									onClick={() => onRuleToggle(t)}
-									className={clsx("chip", rules.includes(t) ? "chip-active" : "chip-muted")}
-								>
-									{t}
-								</button>
-							)
-						)}
-					</div>
+                    <div className="text-xs text-slate-200">Sample rule_hits tags:</div>
+                    <div className="flex flex-wrap gap-2 items-center">
+                        {["legal_cue",
+                          "asl","gh","nsp","lcp","echotrace","redline",
+                          "cds","drt","spanner","snowcap","jellybean","imt","fr",
+                          "t5","pf","nr","softblock","shadowmode","glow","bb",
+                          "utah","florida","california","eu","us_federal"
+                        ].map(
+                            (t) => (
+                                <button
+                                    key={t}
+                                    onClick={() => onRuleToggle(t)}
+                                    className={clsx("chip", rules.includes(t) ? "chip-active" : "chip-muted")}
+                                >
+                                    {t}
+                                </button>
+                            )
+                        )}
+                    </div>
 					<div className="card p-3">
-						<div className="text-xs text-slate-100 mb-1">Quick fill examples</div>
-						<div className="flex flex-wrap gap-3 text-xs">
-							<button className="btn" onClick={() => setExample("utah")}>Utah minors (ASL + GH)</button>
-							<button className="btn" onClick={() => setExample("dsa")}>EU DSA NSP</button>
-							<button className="btn" onClick={() => setExample("fl")}>Florida Jellybean</button>
-							<button className="btn" onClick={() => { setText(""); setRules([]); setAssume(null); setRes(null); }}>Reset</button>
-						</div>
-					</div>
-				</div>
+                        <div className="text-xs text-slate-100 mb-1">Quick fill examples</div>
+                        <div className="flex flex-wrap gap-3 text-xs">
+                            <button className="btn" onClick={() => setExample("utah")}>Utah curfew (ASL + GH)</button>
+                            <button className="btn" onClick={() => setExample("ca_pf")}>California SB976 PF (NR)</button>
+                            <button className="btn" onClick={() => setExample("story")}>Story resharing + expiry</button>
+                            <button className="btn" onClick={() => { setText(""); setRules([]); setAssume(null); setRes(null); }}>Reset</button>
+                        </div>
+                    </div>
+                </div>
 
 			<div className="flex gap-2">
 				<button

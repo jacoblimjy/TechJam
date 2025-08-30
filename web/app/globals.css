@@ -4,8 +4,14 @@
 
 :root { color-scheme: light; }
 body {
-  /* Smooth, brighter dark background without visible banding/lines */
-  @apply text-slate-100 bg-[radial-gradient(1800px_1200px_at_50%_-20%,#0f1b38_28%,transparent_72%),linear-gradient(180deg,#0f1329,#0b1020)];
+  /* Smooth dark background, consistent to the bottom (no light band) */
+  @apply text-slate-100;
+  background-color: #0b1020; /* base */
+  background-image: radial-gradient(2400px 1600px at 50% -25%, #0f1b38 25%, #0f1329 55%, #0b1020 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  min-height: 100vh;
 }
 
 .card {

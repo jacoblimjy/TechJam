@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { postJSON } from "./api";
+import { Badge } from "./Ui";
 
 export default function BatchPanel() {
 	const [rows, setRows] = useState<string>("");
@@ -67,21 +68,24 @@ export default function BatchPanel() {
 
 	return (
 		<div className="card p-5 space-y-3">
-			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-2">
-					<h3 className="font-medium">Batch classify</h3>
-					<span className="text-xs text-slate-300">One artifact per line. Leave rule_hits out to auto‑detect.</span>
-				</div>
-				<div className="flex items-center gap-2">
-					<span className="text-xs text-slate-300">Assume region</span>
-					<select className="select" value={assume || ""} onChange={(e) => setAssume(e.target.value || null)}>
-						<option value="">None</option>
-						{REGIONS.map((r) => (
-							<option key={r} value={r}>{r}</option>
-						))}
-					</select>
-				</div>
-			</div>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <h3 className="font-medium">Batch Classify</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-300">Assume region</span>
+                    <select className="select" value={assume || ""} onChange={(e) => setAssume(e.target.value || null)}>
+                        <option value="">None</option>
+                        {REGIONS.map((r) => (
+                            <option key={r} value={r}>{r}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-slate-200">
+              <Badge>Auto mode</Badge>
+              <span>One artifact per line. Leave rule_hits empty to auto‑detect.</span>
+            </div>
 			<textarea
 				className="input h-40"
 				placeholder={`One artifact per line.\nEither raw text or JSON per line: {"feature_text":"...", "rule_hits":["asl","gh"]}`}
