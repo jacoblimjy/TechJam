@@ -145,23 +145,41 @@ npm run dev
 
 ```mermaid
 flowchart TD
-  UI[Next.js Web (App Router)] -->|HTTP JSON| API[FastAPI]
-  API -->|/ask /classify /search ...| Chains[LangChain Chains]
-  Chains -->|Retrieve| Ret[QdrantVectorStore (Hybrid)]
-  Ret -->|Dense| Dense[BGE-M3 (FlagEmbedding)\n1024-d, cosine, L2-norm]
-  Ret -->|Sparse| Sparse[FastEmbed BM25\n("Qdrant/bm25")]
-  Chains -->|Optional| Rerank[Cross-Encoder\nms-marco-MiniLM-L-6-v2]
-  Chains -->|Prompt| LLM[Groq Llama-3.1-8B-Instant\n(JSON mode for classify)]
-  LLM -->|Strict JSON| API --> UI
+  subgraph Frontend
+    UI[Next.js + Tailwind]
+  end
+
+  subgraph Backend
+    API[FastAPI API]
+    Chains[LangChain Chains]
+    LLM[Groq Llama-3.1-8B]
+    Rerank[Cross-Encoder Reranker]
+  end
+
+  subgraph VectorDB[Qdrant Hybrid Store]
+    Dense[BGE-M3 Dense]
+    Sparse[BM25 Sparse]
+  end
 
   subgraph KB[Knowledge Base]
-    Up[PDF Upload] --> Parse[docling → pypdf]
-    Parse --> Chunk[Header-first → Recursive\n(skip “References”)]
-    Chunk --> Index[Index to Qdrant\nvectors: dense+sparse]
+    Upload[PDF Upload]
+    Parse[docling / pypdf]
+    Chunk[Header-first Chunking]
+    Index[Index to Qdrant]
   end
-  Index --> Ret
 
-  API --> Logs[JSONL logs: classify, feedback]
+  %% Connections
+  UI --> API
+  API --> Chains
+  Chains --> VectorDB
+  VectorDB --> Dense
+  VectorDB --> Sparse
+  Chains --> Rerank
+  Chains --> LLM
+  LLM --> API
+  API --> UI
+  Upload --> Parse --> Chunk --> Index --> VectorDB
+  API --> Logs[JSONL Logs]
 ```
 
 ---
