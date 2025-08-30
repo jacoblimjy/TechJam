@@ -4,6 +4,7 @@ import os
 from typing import List
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient
+from qdrant_client.http.models import Filter, FieldCondition, MatchValue, FilterSelector
 from langchain_qdrant import QdrantVectorStore, RetrievalMode, FastEmbedSparse
 from langchain_core.documents import Document
 
@@ -47,3 +48,27 @@ def add_documents(docs: List[Document], batch_size: int = 128, collection_name: 
         vs.add_documents(docs[i:i+batch_size])
         n += len(docs[i:i+batch_size])
     return n
+
+def delete_by_source_path(abs_path: str, collection_name: str = COLLECTION) -> int:
+    """Delete all points where payload.source_path == abs_path.
+    Returns an estimated number of deleted points (count before delete).
+    """
+    client = get_qdrant_client()
+    flt = Filter(must=[FieldCondition(key="source_path", match=MatchValue(value=abs_path))])
+    try:
+        cnt = client.count(collection_name=collection_name, count_filter=flt, exact=True).count or 0
+    except Exception:
+        cnt = 0
+    selector = FilterSelector(filter=flt)
+    client.delete(collection_name=collection_name, points_selector=selector, wait=True)
+    return int(cnt)
+
+def delete_by_source_paths(paths: list[str], collection_name: str = COLLECTION) -> int:
+    total = 0
+    for p in paths:
+        try:
+            total += delete_by_source_path(p, collection_name=collection_name)
+        except Exception:
+            # best-effort; continue to next variant
+            pass
+    return total

@@ -66,3 +66,13 @@ def jsonl_has_record(rel_path: str, key: str, value: Any) -> bool:
     except Exception:
         return False
     return False
+
+def write_json(rel_path: str, obj: Any) -> str:
+    """Write a JSON object to a repo-relative path, creating parents.
+    Returns the resolved absolute path as a string.
+    """
+    p = _resolve_rel_path(rel_path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, indent=2)
+    return str(p)
