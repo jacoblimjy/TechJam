@@ -191,39 +191,52 @@ npm run dev
 ## 🧠 Architecture
 
 ```mermaid
-flowchart LR
-subgraph FE[Frontend]
-UI[Next.js]
-end
+flowchart TB
+    subgraph FE[Frontend Application]
+        UI[Next.js UI]
+    end
 
-subgraph BE[Backend]
-API[FastAPI]
-LC[LangChain]
-LLM[Groq Llama 3.1 8B]
-CE[Cross Encoder]
-end
+    subgraph KB[Knowledge Base Processing]
+        U[Upload Documents]
+        P[Parse Content]
+        C[Chunk Text]
+        I[Index to Qdrant]
+    end
 
-subgraph DB[Qdrant]
-D[Dense BGE M3]
-S[Sparse BM25]
-end
+    subgraph DB[Vector Database - Qdrant]
+        D[Dense Embeddings BGE-M3]
+        S[Sparse Vectors BM25]
+        H[Hybrid Search]
+    end
 
-subgraph KB[Knowledge Base]
-U[Upload]
-P[Parse]
-C[Chunk]
-I[Index]
-end
+    subgraph BE[Backend Services]
+        API[FastAPI Server]
+        
+        subgraph RAG[RAG Processing]
+            LC[LangChain]
+            CE[Cross Encoder Reranker]
+            LLM[Groq Llama 3.1 8B]
+        end
+    end
 
-UI --> API --> LC
-LC --> DB
-DB --> D
-DB --> S
-LC --> CE
-LC --> LLM
-LLM --> API --> UI
-
-U --> P --> C --> I --> DB
+    %% Knowledge processing flow
+    U --> P --> C --> I --> DB
+    
+    %% Query processing flow
+    UI -->|User Query| API
+    API -->|Search Request| LC
+    LC -->|Query Embedding| DB
+    DB -->|Retrieved Context| H
+    H -->|Results| CE
+    CE -->|Reranked Results| LC
+    LC -->|Context + Query| LLM
+    LLM -->|Generated Response| LC
+    LC -->|Final Answer| API
+    API -->|Response| UI
+    
+    %% Internal connections
+    D --> H
+    S --> H
 ```
 
 ---
