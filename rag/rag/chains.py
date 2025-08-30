@@ -7,7 +7,7 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
 
-from rag.utils import format_docs_for_context, parse_json_safe
+from rag.utils import format_docs_for_context, parse_json_safe, get_few_shot_examples
 from rag.retrieval import get_hybrid_retriever, rerank_docs
 from rag.prompts import QA_SYSTEM, QA_USER, CLASSIFY_SYSTEM, CLASSIFY_USER
 
@@ -58,9 +58,19 @@ def make_qa_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = Non
     return chain
 
 # ---------- CLASSIFY CHAIN ----------
-def make_classify_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = None):
+def make_classify_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = None, use_few_shot: bool = True, max_positive: int = 1, max_negative: int = 1):
     """Input: dict with keys: feature_text (str), rule_hits (list[str]). Optionally filter retrieval by regions."""
     retriever = get_hybrid_retriever(k=k, mmr=mmr, regions=regions)
+    
+    # Get few-shot examples text with both positive and negative examples
+    examples_text = get_few_shot_examples(
+        max_positive=max_positive,
+        max_negative=max_negative,
+        format_as_text=True
+    ) if use_few_shot else ""
+    
+    print(examples_text)  # Debug: show examples text
+
     prompt = ChatPromptTemplate.from_messages([
         ("system", CLASSIFY_SYSTEM),
         ("user", CLASSIFY_USER),
@@ -77,7 +87,7 @@ def make_classify_chain(k: int = 5, mmr: bool = False, regions: list[str] | None
         except Exception:
             pass
         ctx = format_docs_for_context(docs)
-        return {"feature_text": ft, "rule_hits": rh, "context": ctx}
+        return {"feature_text": ft, "rule_hits": rh, "context": ctx, "examples": examples_text}
 
     chain = (
         RunnableLambda(lambda x: x)  # passthrough
