@@ -1,4 +1,3 @@
-Perfect — here’s everything consolidated in **Markdown**, ready for you to copy-paste into your GitHub README.
 
 ---
 
@@ -16,6 +15,25 @@ One-liner: Paste a product feature (title + description) → the system flags wh
 [![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs\&logoColor=white)](https://nextjs.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?logo=tailwindcss\&logoColor=white)](https://tailwindcss.com)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker\&logoColor=white)](https://www.docker.com)
+
+## 📋 Features
+
+- ✅ **Automated compliance detection** for product features across multiple jurisdictions
+- ✅ **Multi-region legal analysis** (EU DSA, COPPA, US state laws, etc.)
+- ✅ **Hybrid search** combining dense (BGE-M3) + sparse (BM25) embeddings
+- ✅ **Cross-encoder reranking** for improved precision
+- ✅ **Audit-ready provenance** tracking with source citations
+- ✅ **Export capabilities** in JSON/CSV formats
+- ✅ **Interactive web interface** built with Next.js
+
+---
+
+## ✅ Prerequisites
+* **Python 3.10+** and **Node.js 18+**
+* **Docker Desktop** (for Qdrant vector database)
+* **Groq API key** (free tier available at [groq.com](https://groq.com))
+* **System Requirements**: 4GB RAM, 2GB disk space
+* **2 terminals** (one for API, one for Web)
 
 ---
 
@@ -56,15 +74,6 @@ TechJam/
 
 ---
 
-## ✅ Prerequisites
-
-* Python 3.10+ and Node 18+
-* Docker (for Qdrant)
-* Groq API key (free tier works)
-* 2 terminals (one for API, one for Web)
-
----
-
 ## 🔑 Environment variables
 
 Backend (`TechJam/rag/.env`):
@@ -101,11 +110,27 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ## 🧱 Setup (one-time)
 
-```bash
-# Start Qdrant
-docker run -p 6333:6333 -v $(pwd)/rag/qdrant_storage:/qdrant/storage qdrant/qdrant:latest
+### 1. Start Qdrant Database
 
-# Backend
+**Linux/macOS:**
+```bash
+# Create storage directory and start Qdrant
+mkdir -p rag/qdrant_storage
+docker run -p 6333:6333 -v $(pwd)/rag/qdrant_storage:/qdrant/storage qdrant/qdrant:latest
+```
+
+**Windows (PowerShell):**
+```powershell
+# Create storage directory
+New-Item -ItemType Directory -Force -Path "rag\qdrant_storage"
+# Start Qdrant container
+docker run -p 6333:6333 -v "${PWD}\rag\qdrant_storage:/qdrant/storage" qdrant/qdrant:latest
+```
+
+### 2. Backend Setup
+
+**Linux/macOS:**
+```bash
 cd TechJam/rag
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
@@ -119,14 +144,36 @@ python scripts/index_kb.py --jsonl data/kb_chunks/chunks.jsonl --collection laws
 uvicorn api.app:app --reload --port 8000
 ```
 
-Frontend:
+**Windows (PowerShell):**
+```powershell
+cd TechJam\rag
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+# Build & index knowledge base
+python scripts\build_chunks.py --raw_dir data\kb_raw --out_jsonl data\kb_chunks\chunks.jsonl --out_meta_csv data\kb_chunks\chunks.meta.csv --manifest data\laws_manifest.csv
+python scripts\create_collection.py
+python scripts\index_kb.py --jsonl data\kb_chunks\chunks.jsonl --collection laws --batch 128
+
+# Run API server
+uvicorn api.app:app --reload --port 8000
+```
+
+### 3. Frontend Setup
 
 ```bash
 cd TechJam/web
-npm i
+npm install
 npm run dev
-# open http://localhost:3000
+# Open http://localhost:3000
 ```
+
+### 4. Verify Installation
+
+- **Qdrant**: Visit http://localhost:6333/dashboard
+- **API**: Visit http://localhost:8000/docs
+- **Frontend**: Visit http://localhost:3000
 
 ---
 
@@ -191,21 +238,3 @@ U --> P --> C --> I --> DB
 
 ---
 
-## 🧪 Demos
-
-* `/` — Paste feature → Analyze → JSON/CSV
-* `/search` — See raw law snippets (auditability)
-* `/demo` — What-if sandbox: “Assume region” override
-
----
-
-## 🛠 Troubleshooting
-
-* **Empty results**: ensure Qdrant running + collection exists.
-* **Region filters**: fallback to broader retrieval if no hits.
-* **Delete didn’t work**: retry; delete is idempotent.
-* **Full reindex**: drop collection, recreate, reindex.
-
----
-
-Do you want me to also add a **“Demo flow checklist”** (like a 1–2 min judge-friendly walkthrough you can read aloud during the presentation)?

@@ -40,7 +40,9 @@ Rules:
 - Consider ONLY legal obligations (not business experiments or A/B/geofencing without legal basis).
 - If unsure, set "needs_geo_logic" to "unclear".
 - Do not invent laws. Use only what is inferable from the feature text and the provided law context.
-- Output MUST be valid JSON (no extra text, no code fences)."""
+- Output MUST be valid JSON (no extra text, no code fences).
+
+{examples}"""
 
 # User message passes inputs and asks for strict JSON.
 CLASSIFY_USER = """Feature Artifact:

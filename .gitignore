@@ -2,6 +2,7 @@ rag/.venv/
 rag/.env
 # rag/.env.example
 rag/__pycache__/
+**/__pycache__/
 rag/qdrant_storage/
 rag/outputs/
 
