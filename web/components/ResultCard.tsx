@@ -18,6 +18,16 @@ export function ResultCard({ res }: { res: any }) {
 				<span className="text-xs text-gray-500">
 					confidence: {Number(res.confidence ?? 0).toFixed(2)}
 				</span>
+				{res?.provenance?.regions_inferred?.length ? (
+					<span className="text-xs text-gray-500">
+						regions: {res.provenance.regions_inferred.join(", ")}
+					</span>
+				) : null}
+				{typeof res?.provenance?.region_filter_used === "boolean" ? (
+					<span className="text-xs px-2 py-0.5 rounded bg-gray-100">
+						filter {res.provenance.region_filter_used ? "on" : "off"}
+					</span>
+				) : null}
 			</div>
 			<p className="mt-3 text-sm">{res.reasoning}</p>
 			<LawChips laws={res.laws || []} />

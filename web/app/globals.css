@@ -3,4 +3,31 @@
 @tailwind utilities;
 
 :root { color-scheme: light; }
-body { @apply bg-white text-gray-900; }
+body {
+  @apply text-gray-900 bg-[radial-gradient(1200px_600px_at_80%_-10%,#dbeafe_18%,transparent_60%),radial-gradient(1000px_500px_at_-10%_0%,#efe9fe_18%,transparent_60%)];
+}
+
+.card {
+  @apply border rounded-2xl bg-white/60 shadow-card backdrop-blur-md border-white/40;
+}
+
+.btn-primary {
+  @apply px-4 py-2 rounded-xl text-white shadow transition transform active:scale-[0.99] hover:shadow-lg;
+  background-image: linear-gradient(135deg, #2e98ff, #8b5cf6 60%, #06b6d4);
+}
+.btn-primary:disabled { @apply opacity-60; }
+
+.btn {
+  @apply px-4 py-2 rounded-xl border bg-white/70 backdrop-blur hover:shadow transition;
+}
+.btn-outline {
+  @apply px-4 py-2 rounded-xl border border-gray-300 bg-transparent hover:bg-white/60 transition;
+}
+
+.select {
+  @apply border rounded px-2 py-1 text-sm bg-white/70 backdrop-blur;
+}
+
+.chip { @apply text-xs px-2.5 py-1 rounded-full border backdrop-blur bg-white/70 border-white/40 shadow-sm; }
+.chip-active { @apply text-white border-transparent shadow; background-image: linear-gradient(135deg, #0ea5e9, #8b5cf6); }
+.chip-muted { @apply bg-white/70; }

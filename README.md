@@ -183,7 +183,7 @@ curl -s -X POST localhost:8000/classify -H 'Content-Type: application/json' \
 ```bash
 # from TechJam/web
 npm i
-cp .env.local.example .env.local   # or ensure API URL matches your backend
+echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local  # ensure API URL matches your backend
 npm run dev
 # open http://localhost:3000
 ```
@@ -218,3 +218,48 @@ npm run dev
 * **Frontend** shows verdict, reasons, law links, and lets you export audit JSON/CSV.
 
 ---
+
+## New: Auto-heuristics + Dataset Runner
+
+- API: `POST /classify_auto` — same as `/classify` but server auto-detects `rule_hits` from text using lightweight regex heuristics.
+
+Example curl:
+
+```bash
+curl -s -X POST "http://localhost:8000/classify_auto" \
+  -H 'Content-Type: application/json' \
+  -d '{"feature_text":"Curfew login blocker with ASL and GH for Utah minors ..."}' | jq
+```
+
+- Script: run the provided synthetic dataset and produce the required `outputs.csv` (+ a JSONL audit):
+
+```bash
+# from TechJam/rag
+source .venv/bin/activate
+python scripts/run_dataset.py \
+  --in data/test_dataset.csv \
+  --out_csv data/outputs.csv \
+  --out_jsonl data/outputs.jsonl \
+  --k 5
+
+# CSV at data/outputs.csv (for submission)
+```
+
+`run_dataset.py` concatenates `feature_name + feature_description`, applies heuristics (toggle with `--no_auto_rules`), calls the classifier, and saves both CSV and JSONL.
+
+### Batch auto classify + region override
+
+- API: `POST /batch_classify_auto` — auto-detects rule hits for each row. Optional `regions` overrides inference globally.
+
+Payload example:
+
+```json
+{
+  "rows": [{"feature_text": "..."}, {"feature_text": "..."}],
+  "k": 5,
+  "csv": true,
+  "regions": ["EU"]
+}
+```
+
+- UI: Batch panel has an “Assume region” dropdown. If no per-line `rule_hits` are provided, it uses `/batch_classify_auto`; otherwise `/batch_classify`. Both accept the optional `regions` override.
