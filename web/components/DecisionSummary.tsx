@@ -29,20 +29,20 @@ export default function DecisionSummary({ res }: { res: any }) {
   const filterUsed = prov.region_filter_used;
   return (
     <div className="grid md:grid-cols-2 gap-4">
-      <div className="border rounded-xl p-4 bg-white shadow-sm space-y-3">
+      <div className="card p-4 space-y-3">
         <div className="flex items-center gap-3">
           <DecisionBadge v={res.needs_geo_logic} />
           <ConfidenceBar c={Number(res.confidence ?? 0)} />
           {regions?.length ? <Badge>regions: {regions.join(", ")}</Badge> : null}
           {typeof filterUsed === "boolean" ? <Badge>filter {filterUsed ? "on" : "off"}</Badge> : null}
         </div>
-        <div className="text-sm text-gray-900 whitespace-pre-wrap">{res.reasoning}</div>
-        <div className="text-xs text-gray-600 flex items-center gap-1">
+        <div className="text-sm text-slate-100 whitespace-pre-wrap">{res.reasoning}</div>
+        <div className="text-xs text-slate-300 flex items-center gap-1">
           <InfoTip text="Signals the model used to triage. Provided tags are 'rules_input'; detected/union are 'rules_hit'." />
           <span>signals:</span>
           <div className="flex flex-wrap gap-1">
             {(rules.length ? rules : rulesInput).map((r, i) => (
-              <span key={i} className="px-1.5 py-0.5 border rounded text-xs bg-gray-50">{r}</span>
+              <span key={i} className="px-1.5 py-0.5 border rounded text-xs bg-slate-800/60 text-slate-100 border-white/10">{r}</span>
             ))}
           </div>
         </div>
@@ -53,10 +53,10 @@ export default function DecisionSummary({ res }: { res: any }) {
           <CopyButton text={JSON.stringify(res, null, 2)} label="Copy JSON" />
         </div>
       </div>
-      <div className="border rounded-xl p-4 bg-white shadow-sm">
+      <div className="card p-4">
         <details open>
-          <summary className="cursor-pointer text-sm text-gray-700">Provenance (audit trail)</summary>
-          <pre className="text-xs bg-gray-50 p-2 rounded mt-2 overflow-auto max-h-80">
+          <summary className="cursor-pointer text-sm text-slate-200">Provenance (audit trail)</summary>
+          <pre className="text-xs bg-slate-800/70 text-slate-100 border border-white/10 p-2 rounded mt-2 overflow-auto max-h-80 backdrop-blur">
             {JSON.stringify(prov, null, 2)}
           </pre>
         </details>
@@ -64,4 +64,3 @@ export default function DecisionSummary({ res }: { res: any }) {
     </div>
   );
 }
-

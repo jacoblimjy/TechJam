@@ -7,7 +7,7 @@ export function LawChips({ laws }: { laws: any[] }) {
                     key={i}
                     href={l.source || "#"}
                     target="_blank"
-                    className="text-xs px-2 py-1 rounded-full border bg-white/70 backdrop-blur hover:bg-gradient-to-r hover:from-sky-100 hover:to-violet-100"
+                    className="text-xs px-2 py-1 rounded-full border bg-slate-800/60 text-slate-100 border-white/10 backdrop-blur hover:bg-slate-700/60"
                 >
                     {l.name}
                     {l.region ? ` · ${l.region}` : ""}

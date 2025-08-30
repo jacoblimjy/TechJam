@@ -25,12 +25,11 @@ export default function TermsLegend() {
   return (
     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
       {TERMS.map((t) => (
-        <div key={t.key} className="border rounded-lg p-3 bg-white">
-          <div className="text-sm font-medium">{t.key} — {t.label}</div>
-          <div className="text-xs text-gray-600">{t.desc}</div>
+        <div key={t.key} className="card p-3">
+          <div className="text-sm font-medium text-slate-100">{t.key} — {t.label}</div>
+          <div className="text-xs text-slate-300">{t.desc}</div>
         </div>
       ))}
     </div>
   );
 }
-

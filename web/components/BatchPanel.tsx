@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { postJSON } from "./api";
-import { InfoTip } from "./Ui";
 
 export default function BatchPanel() {
 	const [rows, setRows] = useState<string>("");
@@ -68,33 +67,29 @@ export default function BatchPanel() {
 
 	return (
 		<div className="card p-5 space-y-3">
-			<div className="flex items-center gap-2">
-				<h3 className="font-medium">Batch classify</h3>
-				<InfoTip text="One artifact per line. Leave rule_hits out to auto-detect. Use the region selector to constrain jurisdictions." />
-			</div>
-			<div className="flex items-center gap-2">
-				<span className="text-sm text-gray-500">Assume region:</span>
-				<select
-					className="select"
-					value={assume || ""}
-					onChange={(e) => setAssume(e.target.value || null)}
-				>
-					<option value="">None</option>
-					{REGIONS.map((r) => (
-						<option key={r} value={r}>
-							{r}
-						</option>
-					))}
-				</select>
+			<div className="flex items-center justify-between">
+				<div className="flex items-center gap-2">
+					<h3 className="font-medium">Batch classify</h3>
+					<span className="text-xs text-slate-300">One artifact per line. Leave rule_hits out to auto‑detect.</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<span className="text-xs text-slate-300">Assume region</span>
+					<select className="select" value={assume || ""} onChange={(e) => setAssume(e.target.value || null)}>
+						<option value="">None</option>
+						{REGIONS.map((r) => (
+							<option key={r} value={r}>{r}</option>
+						))}
+					</select>
+				</div>
 			</div>
 			<textarea
-				className="w-full h-40 border rounded-xl p-3"
+				className="input h-40"
 				placeholder={`One artifact per line.\nEither raw text or JSON per line: {"feature_text":"...", "rule_hits":["asl","gh"]}`}
 				value={rows}
 				onChange={(e) => setRows(e.target.value)}
 			/>
 			<div className="flex gap-2">
-			<button onClick={runBatch} className="btn-primary" disabled={loading}>
+			<button onClick={runBatch} className="btn-primary" disabled={loading || rows.trim().length === 0}>
 				{loading ? "Running..." : "Batch classify"}
 			</button>
 				{csv && (
@@ -106,8 +101,8 @@ export default function BatchPanel() {
 
 			{out && (
 				<div className="space-y-2">
-					<div className="text-xs text-gray-600">{out.length} rows</div>
-					<pre className="text-xs bg-gray-50 p-2 rounded overflow-auto max-h-80">
+					<div className="text-xs text-slate-200">{out.length} rows</div>
+					<pre className="text-xs bg-slate-800/70 text-slate-100 border border-white/10 p-2 rounded overflow-auto max-h-80 backdrop-blur">
 						{JSON.stringify(out, null, 2)}
 					</pre>
 				</div>

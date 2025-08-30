@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { postJSON } from "./api";
 import DecisionSummary from "./DecisionSummary";
-import { InfoTip, Badge } from "./Ui";
+import { Badge } from "./Ui";
 import clsx from "clsx";
 
 const REGIONS = ["EU/EEA", "US-CA", "US-UT", "US-FL", "US"];
@@ -84,59 +84,56 @@ export default function AnalyzeBox() {
 		<div className="card p-5 space-y-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-lg font-medium">Single artifact analysis</h2>
-				<div className="flex items-center gap-2 text-xs text-gray-600">
-					<Badge>Auto mode</Badge>
-					<span>no tags selected → auto‑detect rules</span>
-					<InfoTip text="If you select tags, the model uses them as explicit signals. Otherwise, the server auto-detects rule hits (ASL, GH, NSP, etc.)." />
-				</div>
-			</div>
-			<label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Step 1 — Paste feature artifact</label>
-			<textarea
-				className="w-full h-48 border rounded-xl p-3 focus:outline-none card"
-				placeholder="e.g., Curfew login blocker with ASL and GH for Utah minors..."
-				value={text}
-				onChange={(e) => setText(e.target.value)}
-			/>
-			<div className="flex flex-wrap gap-2 items-center">
-				{["legal_cue", "asl", "gh", "lcp", "nsp", "echotrace", "redline"].map(
-					(t) => (
-						<button
-							key={t}
-							onClick={() => onRuleToggle(t)}
-							className={clsx("chip", rules.includes(t) ? "chip-active" : "chip-muted")}
-						>
-							{t}
-						</button>
-					)
-				)}
-				<div className="ml-auto flex items-center gap-2">
-					<span className="text-sm text-gray-500">Step 2 — Assume region</span>
-					<select
-						className="select"
-						value={assume || ""}
-						onChange={(e) => setAssume(e.target.value || null)}
-					>
+				<div className="flex items-center gap-2">
+					<span className="text-xs text-slate-300">Assume region</span>
+					<select className="select" value={assume || ""} onChange={(e) => setAssume(e.target.value || null)}>
 						<option value="">None</option>
 						{REGIONS.map((r) => (
-							<option key={r} value={r}>
-								{r}
-							</option>
+							<option key={r} value={r}>{r}</option>
 						))}
 					</select>
 				</div>
 			</div>
-			<div className="flex items-center gap-2 text-xs text-gray-600">
-				<InfoTip text="Assume region limits retrieval to that jurisdiction (and related federal, if applicable). Leave unset to infer automatically from the text." />
-				<button className="text-xs underline" onClick={() => setExample("utah")}>Example: Utah minors</button>
-				<button className="text-xs underline" onClick={() => setExample("dsa")}>Example: EU DSA NSP</button>
-				<button className="text-xs underline" onClick={() => setExample("fl")}>Example: Florida Jellybean</button>
-				<button className="text-xs underline" onClick={() => { setText(""); setRules([]); setAssume(null); setRes(null); }}>Reset</button>
-			</div>
+        <div className="flex items-center gap-2 text-xs text-slate-200">
+          <Badge>Auto mode</Badge>
+          <span>no tags selected → auto‑detect rules</span>
+        </div>
+			<textarea
+				className="input h-48"
+				placeholder="e.g., Curfew login blocker with ASL and GH for Utah minors..."
+				value={text}
+				onChange={(e) => setText(e.target.value)}
+			/>
+				<div className="space-y-2">
+					<div className="text-xs text-slate-200">Sample rule tags:</div>
+					<div className="flex flex-wrap gap-2 items-center">
+						{["legal_cue", "asl", "gh", "lcp", "nsp", "echotrace", "redline"].map(
+							(t) => (
+								<button
+									key={t}
+									onClick={() => onRuleToggle(t)}
+									className={clsx("chip", rules.includes(t) ? "chip-active" : "chip-muted")}
+								>
+									{t}
+								</button>
+							)
+						)}
+					</div>
+					<div className="card p-3">
+						<div className="text-xs text-slate-100 mb-1">Quick fill examples</div>
+						<div className="flex flex-wrap gap-3 text-xs">
+							<button className="btn" onClick={() => setExample("utah")}>Utah minors (ASL + GH)</button>
+							<button className="btn" onClick={() => setExample("dsa")}>EU DSA NSP</button>
+							<button className="btn" onClick={() => setExample("fl")}>Florida Jellybean</button>
+							<button className="btn" onClick={() => { setText(""); setRules([]); setAssume(null); setRes(null); }}>Reset</button>
+						</div>
+					</div>
+				</div>
 
 			<div className="flex gap-2">
 				<button
 					onClick={onAnalyze}
-					disabled={!text || loading}
+						disabled={!text.trim() || loading}
 					className="btn-primary"
 				>
 					{loading ? "Analyzing..." : "Analyze"}

@@ -14,30 +14,30 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en" className={jakarta.variable}>
-			<body className="font-sans" style={{ fontFamily: "var(--font-jakarta)" }}>
-				<div className="max-w-6xl mx-auto p-6">
-					<header className="mb-6">
-						<div className="rounded-2xl p-5 bg-white/70 border border-white/40 shadow-card backdrop-blur">
-							<div className="flex items-center justify-between">
-								<h1 className="text-2xl font-semibold bg-clip-text text-transparent bg-brand-gradient">Geo-Compliance Detector</h1>
-								<ApiStatus />
-							</div>
-							<p className="text-sm text-gray-700 mt-1">
-								Flag features needing geo‑specific logic. Clear reasoning, linked laws, and audit‑ready provenance.
-							</p>
-							<nav className="mt-3 flex flex-wrap gap-2 text-sm">
-								<a className="px-3 py-1 rounded-full border bg-white/70 backdrop-blur hover:shadow" href="/">Analyze</a>
-								<a className="px-3 py-1 rounded-full border bg-white/70 backdrop-blur hover:shadow" href="/search">Search</a>
-								<a className="px-3 py-1 rounded-full border bg-white/70 backdrop-blur hover:shadow" href="/demo">What‑if</a>
-								<a className="px-3 py-1 rounded-full border bg-white/70 backdrop-blur hover:shadow" href="/laws">Laws</a>
-								<a className="px-3 py-1 rounded-full border bg-white/70 backdrop-blur hover:shadow" href="/docs">Docs</a>
-							</nav>
-						</div>
-					</header>
-					{children}
-				</div>
-			</body>
-		</html>
+    <html lang="en" className={jakarta.variable}>
+      <body className="font-sans" style={{ fontFamily: "var(--font-jakarta)" }}>
+        <div className="max-w-6xl mx-auto p-6">
+          <header className="mb-6">
+            <div className="rounded-2xl p-5 bg-slate-900/60 border border-white/10 shadow-card backdrop-blur">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-semibold bg-clip-text text-transparent bg-brand-gradient">Geo-Compliance Detector</h1>
+                <ApiStatus />
+              </div>
+              <p className="text-sm text-slate-200 mt-1">
+                Flag features needing geo‑specific logic. Clear reasoning, linked laws, and audit‑ready provenance.
+              </p>
+              <nav className="mt-3 flex flex-wrap gap-2 text-sm">
+                <a className="px-3 py-1 rounded-full border bg-slate-800/60 text-slate-100 border-white/10 backdrop-blur hover:shadow" href="/">Analyze</a>
+                <a className="px-3 py-1 rounded-full border bg-slate-800/60 text-slate-100 border-white/10 backdrop-blur hover:shadow" href="/search">Search</a>
+                <a className="px-3 py-1 rounded-full border bg-slate-800/60 text-slate-100 border-white/10 backdrop-blur hover:shadow" href="/demo">What‑if</a>
+                <a className="px-3 py-1 rounded-full border bg-slate-800/60 text-slate-100 border-white/10 backdrop-blur hover:shadow" href="/laws">Laws</a>
+                <a className="px-3 py-1 rounded-full border bg-slate-800/60 text-slate-100 border-white/10 backdrop-blur hover:shadow" href="/help">Help</a>
+              </nav>
+            </div>
+          </header>
+          {children}
+        </div>
+      </body>
+    </html>
 	);
 }

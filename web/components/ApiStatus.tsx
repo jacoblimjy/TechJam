@@ -25,10 +25,9 @@ export default function ApiStatus() {
   const color = ok == null ? "bg-gray-300" : ok ? "bg-green-500" : "bg-red-500";
   const label = ok == null ? "checking" : ok ? "API online" : "API offline";
   return (
-    <span className="inline-flex items-center gap-1 text-xs text-gray-600" title={label}>
+    <span className="inline-flex items-center gap-1 text-xs text-slate-300" title={label}>
       <span className={`inline-block w-2 h-2 rounded-full ${color}`} />
       {label}
     </span>
   );
 }
-
