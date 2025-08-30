@@ -143,23 +143,23 @@ npm run dev
 
 ```mermaid
 flowchart TD
-  UI[Next.js Web (App Router)] -->|HTTP JSON| API[FastAPI]
-  API -->|/ask /classify /search ...| Chains[LangChain Chains]
-  Chains -->|Retrieve| Ret[QdrantVectorStore (Hybrid)]
-  Ret -->|Dense| Dense[BGE-M3 (FlagEmbedding)\n1024-d, cosine, L2-norm]
-  Ret -->|Sparse| Sparse[FastEmbed BM25\n("Qdrant/bm25")]
-  Chains -->|Optional| Rerank[Cross-Encoder\nms-marco-MiniLM-L-6-v2]
-  Chains -->|Prompt| LLM[Groq Llama-3.1-8B-Instant\n(JSON mode for classify)]
-  LLM -->|Strict JSON| API --> UI
+  UI[Next.js Web App Router] -->|HTTP JSON| API[FastAPI]
+  API -->|ask / classify / search| Chains[LangChain Chains]
+  Chains -->|Retrieve| Ret[Qdrant Hybrid Store]
+  Ret --> Dense[BGE-M3 Embeddings 1024-d cosine]
+  Ret --> Sparse[FastEmbed BM25 Sparse]
+  Chains -->|Optional| Rerank[Cross-Encoder ms-marco-MiniLM-L-6-v2]
+  Chains --> LLM[Groq Llama-3.1-8B-Instant JSON Classifier]
+  LLM --> API --> UI
 
   subgraph KB[Knowledge Base]
-    Up[PDF Upload] --> Parse[docling → pypdf]
-    Parse --> Chunk[Header-first → Recursive\n(skip “References”)]
-    Chunk --> Index[Index to Qdrant\nvectors: dense+sparse]
+    Up[PDF Upload] --> Parse[docling or pypdf Parser]
+    Parse --> Chunk[Header-first Chunking skip References]
+    Chunk --> Index[Index to Qdrant Dense + Sparse]
   end
   Index --> Ret
 
-  API --> Logs[JSONL logs: classify, feedback]
+  API --> Logs[JSONL logs classify + feedback]
 ```
 
 ---
