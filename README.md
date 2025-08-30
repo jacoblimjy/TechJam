@@ -146,7 +146,7 @@ uvicorn api.app:app --reload --port 8000
 
 **Windows (PowerShell):**
 ```powershell
-cd TechJam\rag
+cd .\rag
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
