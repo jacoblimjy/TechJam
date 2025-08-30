@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { postJSON } from "./api";
 import { Badge } from "./Ui";
 
@@ -15,6 +15,93 @@ export default function BatchPanel() {
     if (!v) return null;
     if (v === "EU/EEA") return ["EU"];
     return [v];
+  }
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // --- CSV import helpers (handles basic quoted CSV) ---
+  function parseCsvRow(line: string): string[] {
+    const out: string[] = [];
+    let cur = "";
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        // handle escaped quotes ""
+        if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
+          cur += '"'; i++; continue;
+        }
+        inQuotes = !inQuotes;
+      } else if (ch === "," && !inQuotes) {
+        out.push(cur); cur = "";
+      } else {
+        cur += ch;
+      }
+    }
+    out.push(cur);
+    return out.map(s => s.trim().replace(/^"|"$/g, ""));
+  }
+
+  function parseCsvText(text: string): { feature_text: string; rule_hits: string[] }[] {
+    const lines = text.split(/\r?\n/);
+    const rows: string[] = [];
+    let buf = "";
+    const pushIfComplete = () => {
+      const q = (buf.match(/"/g) || []).length;
+      if (q % 2 === 0) { rows.push(buf); buf = ""; }
+    };
+    for (const raw of lines) {
+      if (!buf) { buf = raw; } else { buf += "\n" + raw; }
+      pushIfComplete();
+    }
+    if (buf) rows.push(buf);
+    if (!rows.length) return [];
+    const header = parseCsvRow(rows[0]).map(h => h.toLowerCase().trim());
+    const idxName = header.indexOf("feature_name");
+    const idxDesc = header.indexOf("feature_description");
+    const idxText = header.indexOf("feature_text");
+    const idxRules = header.indexOf("rule_hits");
+    const out: { feature_text: string; rule_hits: string[] }[] = [];
+    for (let i = 1; i < rows.length; i++) {
+      const cols = parseCsvRow(rows[i]);
+      if (!cols.length || cols.every(c => !c.trim())) continue;
+      let ft = "";
+      if (idxText >= 0 && cols[idxText]) {
+        ft = cols[idxText];
+      } else if (idxName >= 0 || idxDesc >= 0) {
+        const name = idxName >= 0 ? (cols[idxName] || "") : "";
+        const desc = idxDesc >= 0 ? (cols[idxDesc] || "") : "";
+        ft = [name, desc].filter(Boolean).join("\n\n");
+      } else {
+        // fallback: join all columns
+        ft = cols.join(", ");
+      }
+      const rh = idxRules >= 0 && cols[idxRules] ? String(cols[idxRules]).split(/[;,\s]+/).filter(Boolean) : [];
+      if (ft.trim()) out.push({ feature_text: ft.trim(), rule_hits: rh });
+    }
+    return out;
+  }
+
+  async function importCsv(file: File) {
+    const text = await file.text();
+    const rowsParsed = parseCsvText(text);
+    if (!rowsParsed.length) return;
+    // Populate the textarea with JSON lines so users can review/edit
+    const jsonl = rowsParsed.map(r => JSON.stringify(r)).join("\n");
+    setRows(jsonl);
+  }
+
+  function triggerCsvPicker() {
+    fileInputRef.current?.click();
+  }
+
+  async function handleCsvPicked(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] || null;
+    if (file) {
+      await importCsv(file);
+    }
+    // reset so picking same file twice still fires change
+    e.target.value = "";
   }
 
 	function parseRows(): { feature_text: string; rule_hits: string[] }[] {
@@ -73,6 +160,15 @@ export default function BatchPanel() {
                     <h3 className="font-medium">Batch Classify</h3>
                 </div>
                 <div className="flex items-center gap-2">
+                    {/* Hidden file input for CSV import */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv,text/csv"
+                      className="hidden"
+                      onChange={handleCsvPicked}
+                    />
+                    <button className="btn btn-compact" onClick={triggerCsvPicker}>Import CSV</button>
                     <span className="text-xs text-slate-300">Assume region</span>
                     <select className="select" value={assume || ""} onChange={(e) => setAssume(e.target.value || null)}>
                         <option value="">None</option>
@@ -86,12 +182,13 @@ export default function BatchPanel() {
               <Badge>Auto mode</Badge>
               <span>One artifact per line. Leave rule_hits empty to auto‑detect.</span>
             </div>
-			<textarea
-				className="input h-40"
-				placeholder={`One artifact per line.\nEither raw text or JSON per line: {"feature_text":"...", "rule_hits":["asl","gh"]}`}
-				value={rows}
-				onChange={(e) => setRows(e.target.value)}
-			/>
+            <div className="text-xs text-slate-300">CSV with columns: feature_text OR feature_name + feature_description (optional: rule_hits)</div>
+            <textarea
+                className="input h-40"
+                placeholder={`One artifact per line.\nEither raw text or JSON per line: {"feature_text":"...", "rule_hits":["asl","gh"]}`}
+                value={rows}
+                onChange={(e) => setRows(e.target.value)}
+            />
 			<div className="flex gap-2">
 			<button onClick={runBatch} className="btn-primary" disabled={loading || rows.trim().length === 0}>
 				{loading ? "Running..." : "Batch classify"}
