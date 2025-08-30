@@ -8,7 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
 
 from rag.utils import format_docs_for_context, parse_json_safe
-from rag.retrieval import get_hybrid_retriever
+from rag.retrieval import get_hybrid_retriever, rerank_docs
 from rag.prompts import QA_SYSTEM, QA_USER, CLASSIFY_SYSTEM, CLASSIFY_USER
 
 # --- LLM: Groq ---
@@ -42,6 +42,10 @@ def make_qa_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = Non
     def _gather(inputs: Dict[str, Any]) -> Dict[str, Any]:
         q = inputs["question"]
         docs = retriever.invoke(q)
+        try:
+            docs = rerank_docs(q, docs, top_k=k)
+        except Exception:
+            pass
         return {"question": q, "context": format_docs_for_context(docs)}
 
     chain = (
@@ -68,6 +72,10 @@ def make_classify_chain(k: int = 5, mmr: bool = False, regions: list[str] | None
         ft = inputs["feature_text"]
         rh = inputs.get("rule_hits", [])
         docs = retriever.invoke(ft)
+        try:
+            docs = rerank_docs(ft, docs, top_k=k)
+        except Exception:
+            pass
         ctx = format_docs_for_context(docs)
         return {"feature_text": ft, "rule_hits": rh, "context": ctx}
 

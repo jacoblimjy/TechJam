@@ -37,6 +37,11 @@ body {
   @apply px-4 py-2 rounded-xl text-white font-medium bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 border border-white/10 shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400/40 active:scale-[0.99] transition;
 }
 
+/* Danger/alert action (e.g., Needs fix) */
+.btn-danger {
+  @apply px-4 py-2 rounded-xl text-white font-medium bg-red-600 hover:bg-red-500 active:bg-red-700 border border-white/10 shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400/40 active:scale-[0.99] transition;
+}
+
 .select {
   @apply border rounded px-2 py-1 text-sm bg-slate-800/60 text-slate-100 border-white/15 backdrop-blur hover:bg-slate-700/60;
 }

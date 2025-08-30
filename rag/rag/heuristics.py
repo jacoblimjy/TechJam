@@ -3,8 +3,15 @@ import re
 from typing import List, Set
 
 _RULES = [
-    (r"\bASL\b|age[- ]?sensitive|under\s*1[38]|minor[s]?", "asl"),
-    (r"\bGH\b|geo[- ]?handler|geo[- ]?route|region[- ]specific|EEA|EU/EEA|\bEU\b|European Union", "gh"),
+    # Age-sensitive logic (expanded)
+    (
+        r"\bASL\b|age[- ]?sensitive|age[- ]?verification|age[- ]?gate|age\s*check|parental\s+consent|"
+        r"curfew|night\s*hours|after\s*10:?30\s*(?:pm|p\.m\.)?|before\s*6:?30\s*(?:am|a\.m\.)?|"
+        r"under\s*1[38]|minor[s]?",
+        "asl",
+    ),
+    # Geo routing/targeting (expanded synonyms)
+    (r"\bGH\b|geo[- ]?handler|geo[- ]?route|geo[- ]?fenc\w*|geofenc\w*|region[- ]specific|EEA|EU/EEA|\bEU\b|European Union", "gh"),
     (r"\bNSP\b|non[- ]shareable policy", "nsp"),
     (r"\bLCP\b|local compliance policy", "lcp"),
     (r"\bEchoTrace\b", "echotrace"),
