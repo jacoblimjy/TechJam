@@ -7,6 +7,14 @@ export default function BatchPanel() {
 	const [csv, setCsv] = useState<string | null>(null);
 	const [out, setOut] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
+  const [assume, setAssume] = useState<string | null>(null);
+
+  const REGIONS = ["EU/EEA", "US-CA", "US-UT", "US-FL", "US"];
+  function mapAssumeToCodes(v: string | null): string[] | null {
+    if (!v) return null;
+    if (v === "EU/EEA") return ["EU"];
+    return [v];
+  }
 
 	function parseRows(): { feature_text: string; rule_hits: string[] }[] {
 		const lines = rows
@@ -31,8 +39,12 @@ export default function BatchPanel() {
 		setCsv(null);
 		setOut(null);
 		try {
-			const payload = { rows: parseRows(), k: 5, csv: true };
-			const res = await postJSON<any>("/batch_classify", payload);
+			const rowsParsed = parseRows();
+			const allEmpty = rowsParsed.every((r) => !r.rule_hits || r.rule_hits.length === 0);
+			const regions = mapAssumeToCodes(assume);
+			const payload = { rows: rowsParsed, k: 5, csv: true, regions } as any;
+			const path = allEmpty ? "/batch_classify_auto" : "/batch_classify";
+			const res = await postJSON<any>(path, payload);
 			setOut(res.rows);
 			setCsv(res.csv || null);
 		} catch (e: any) {
@@ -54,32 +66,46 @@ export default function BatchPanel() {
 	}
 
 	return (
-		<div className="space-y-3">
+		<div className="card p-5 space-y-3">
+			<div className="flex items-center justify-between">
+				<div className="flex items-center gap-2">
+					<h3 className="font-medium">Batch classify</h3>
+					<span className="text-xs text-slate-300">One artifact per line. Leave rule_hits out to auto‑detect.</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<span className="text-xs text-slate-300">Assume region</span>
+					<select className="select" value={assume || ""} onChange={(e) => setAssume(e.target.value || null)}>
+						<option value="">None</option>
+						{REGIONS.map((r) => (
+							<option key={r} value={r}>{r}</option>
+						))}
+					</select>
+				</div>
+			</div>
 			<textarea
-				className="w-full h-40 border rounded-xl p-3"
-				placeholder={`One artifact per line.\nEither raw text or {"feature_text":"...", "rule_hits":["asl","gh"]}`}
+				className="input h-40"
+				placeholder={`One artifact per line.\nEither raw text or JSON per line: {"feature_text":"...", "rule_hits":["asl","gh"]}`}
 				value={rows}
 				onChange={(e) => setRows(e.target.value)}
 			/>
 			<div className="flex gap-2">
-				<button
-					onClick={runBatch}
-					className="px-4 py-2 rounded-lg bg-black text-white"
-					disabled={loading}
-				>
-					{loading ? "Running..." : "Batch classify"}
-				</button>
+			<button onClick={runBatch} className="btn-primary" disabled={loading || rows.trim().length === 0}>
+				{loading ? "Running..." : "Batch classify"}
+			</button>
 				{csv && (
-					<button onClick={downloadCSV} className="px-4 py-2 rounded-lg border">
+					<button onClick={downloadCSV} className="btn">
 						Download CSV
 					</button>
 				)}
 			</div>
 
 			{out && (
-				<pre className="text-xs bg-gray-50 p-2 rounded overflow-auto max-h-80">
-					{JSON.stringify(out, null, 2)}
-				</pre>
+				<div className="space-y-2">
+					<div className="text-xs text-slate-200">{out.length} rows</div>
+					<pre className="text-xs bg-slate-800/70 text-slate-100 border border-white/10 p-2 rounded overflow-auto max-h-80 backdrop-blur">
+						{JSON.stringify(out, null, 2)}
+					</pre>
+				</div>
 			)}
 		</div>
 	);

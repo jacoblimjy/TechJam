@@ -3,4 +3,33 @@
 @tailwind utilities;
 
 :root { color-scheme: light; }
-body { @apply bg-white text-gray-900; }
+body {
+  /* Smooth, brighter dark background without visible banding/lines */
+  @apply text-slate-100 bg-[radial-gradient(1800px_1200px_at_50%_-20%,#0f1b38_28%,transparent_72%),linear-gradient(180deg,#0f1329,#0b1020)];
+}
+
+.card {
+  @apply border rounded-2xl bg-slate-800/60 text-slate-100 shadow-card backdrop-blur-md border-white/15 transition hover:shadow-xl hover:-translate-y-px;
+}
+
+.btn-primary {
+  @apply px-4 py-2 rounded-xl text-slate-100 border border-white/15 bg-slate-800/60 backdrop-blur transition transform active:scale-[0.99] hover:bg-slate-700/60 hover:border-white/25 hover:shadow;
+}
+.btn-primary:disabled { @apply opacity-60; }
+
+.btn {
+  @apply px-4 py-2 rounded-xl border bg-slate-800/50 text-slate-100 border-white/10 backdrop-blur hover:shadow transition hover:bg-slate-700/50;
+}
+.btn-outline {
+  @apply px-4 py-2 rounded-xl border border-white/10 bg-transparent text-slate-100 hover:bg-slate-800/40 transition;
+}
+
+.select {
+  @apply border rounded px-2 py-1 text-sm bg-slate-800/60 text-slate-100 border-white/15 backdrop-blur hover:bg-slate-700/60;
+}
+
+.chip { @apply text-xs px-2.5 py-1 rounded-full border backdrop-blur bg-slate-800/50 text-slate-200 border-white/10 shadow-sm; }
+.chip-active { @apply text-white border-transparent shadow; background-image: linear-gradient(135deg, #0ea5e9, #8b5cf6); }
+.chip-muted { @apply bg-slate-800/60; }
+
+.input { @apply w-full border rounded-xl p-3 bg-slate-800/60 text-slate-100 placeholder-slate-400 border-white/15 focus:outline-none focus:ring-2 focus:ring-sky-400/30 backdrop-blur; }
