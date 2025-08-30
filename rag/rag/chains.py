@@ -29,9 +29,9 @@ def _chat(json_mode: bool = False):
     return ChatGroq(**kwargs)
 
 # ---------- QA CHAIN ----------
-def make_qa_chain(k: int = 5, mmr: bool = False):
-    """Input: a plain string question."""
-    retriever = get_hybrid_retriever(k=k, mmr=mmr)
+def make_qa_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = None):
+    """Input: a plain string question. Optionally filter retrieval by regions."""
+    retriever = get_hybrid_retriever(k=k, mmr=mmr, regions=regions)
     prompt = ChatPromptTemplate.from_messages([
         ("system", QA_SYSTEM),
         ("user", QA_USER),
@@ -54,9 +54,9 @@ def make_qa_chain(k: int = 5, mmr: bool = False):
     return chain
 
 # ---------- CLASSIFY CHAIN ----------
-def make_classify_chain(k: int = 5, mmr: bool = False):
-    """Input: dict with keys: feature_text (str), rule_hits (list[str])"""
-    retriever = get_hybrid_retriever(k=k, mmr=mmr)
+def make_classify_chain(k: int = 5, mmr: bool = False, regions: list[str] | None = None):
+    """Input: dict with keys: feature_text (str), rule_hits (list[str]). Optionally filter retrieval by regions."""
+    retriever = get_hybrid_retriever(k=k, mmr=mmr, regions=regions)
     prompt = ChatPromptTemplate.from_messages([
         ("system", CLASSIFY_SYSTEM),
         ("user", CLASSIFY_USER),
