@@ -1,6 +1,8 @@
 "use client";
 import { LawChips } from "./LawChips";
 import { Badge, CopyButton, InfoTip } from "./Ui";
+import { postJSON } from "./api";
+import { useState } from "react";
 
 function DecisionBadge({ v }: { v: string }) {
   const m = (v || "unclear").toLowerCase();
@@ -27,6 +29,21 @@ export default function DecisionSummary({ res }: { res: any }) {
   const rulesInput: string[] = prov.rules_input || [];
   const regions: string[] = prov.regions_inferred || [];
   const filterUsed = prov.region_filter_used;
+  const [fbSent, setFbSent] = useState(false);
+  async function sendFeedback(vote: "up" | "down") {
+    try {
+      const reqId = prov?.metrics?.request_id;
+      if (!reqId) return;
+      await postJSON("/feedback", {
+        request_id: reqId,
+        verdict: res.needs_geo_logic,
+        vote,
+        regions,
+        rules_input: rulesInput,
+      });
+      setFbSent(true);
+    } catch {}
+  }
   return (
     <div className="space-y-4">
       <div className="card p-4 space-y-3">
@@ -51,6 +68,13 @@ export default function DecisionSummary({ res }: { res: any }) {
         </div>
         <div className="flex items-center gap-2">
           <CopyButton text={JSON.stringify(res, null, 2)} label="Copy JSON" />
+          {prov?.metrics?.request_id && !fbSent && (
+            <>
+              <button className="btn-accent text-xs px-2 py-1" onClick={() => sendFeedback("up")}>Looks right</button>
+              <button className="btn-danger text-xs px-2 py-1" onClick={() => sendFeedback("down")}>Needs fix</button>
+            </>
+          )}
+          {fbSent && <span className="text-xs text-slate-300">Feedback recorded. Thank you.</span>}
         </div>
       </div>
       <div className="card p-4">

@@ -87,3 +87,21 @@ class BatchClassifyRow(BaseModel):
 class BatchClassifyResponse(BaseModel):
     rows: List[BatchClassifyRow]
     csv: Optional[str] = None
+
+# ---- Feedback (review + logging) ----
+class FeedbackRequest(BaseModel):
+    # Link to a specific classification run (preferred)
+    request_id: Optional[str] = None
+    # Minimal reference if request_id is missing
+    feature_text: Optional[str] = None
+    verdict: Optional[str] = Field(default=None, description="Model's needs_geo_logic at time of review")
+    vote: str = Field(..., description="'up' if correct, 'down' if incorrect")
+    correction_needs_geo_logic: Optional[str] = Field(default=None, description="yes|no|unclear if proposing a correction")
+    correction_reasoning: Optional[str] = None
+    notes: Optional[str] = None
+    rules_input: Optional[List[str]] = None
+    regions: Optional[List[str]] = None
+
+class FeedbackResponse(BaseModel):
+    ok: bool
+    saved_path: Optional[str] = None

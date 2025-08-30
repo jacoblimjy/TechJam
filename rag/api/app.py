@@ -2,6 +2,7 @@
 from __future__ import annotations
 import os
 from typing import List, Dict, Any
+import uuid
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
@@ -11,7 +12,7 @@ from pathlib import Path
 import csv
 
 from rag.chains import make_qa_chain, make_classify_chain
-from rag.retrieval import get_hybrid_retriever
+from rag.retrieval import get_hybrid_retriever, rerank_docs, rerank_with_info
 from rag.heuristics import auto_rule_hits, infer_regions
 from api.schemas import (
     AskRequest, AskResponse,
@@ -19,9 +20,10 @@ from api.schemas import (
     ClassifyRequest, ClassifyResponse,
     ClassifyAutoRequest,
     BatchClassifyRequest, BatchClassifyResponse, BatchClassifyRow,
-    BatchClassifyAutoRequest
+    BatchClassifyAutoRequest,
+    FeedbackRequest, FeedbackResponse,
 )
-from api.utils import rows_to_csv
+from api.utils import rows_to_csv, append_jsonl, utc_now_iso, jsonl_has_record
 
 load_dotenv()
 
@@ -98,12 +100,20 @@ def list_laws():
 @app.post("/classify", response_model=ClassifyResponse)
 def classify(req: ClassifyRequest):
     try:
+        req_id = str(uuid.uuid4())
+        import time
+        t0 = time.perf_counter()
         # Use override regions if provided, else infer from text
         regions = req.regions if getattr(req, "regions", None) else infer_regions(req.feature_text)
         # Build provenance from retrieval (law snippets surfaced)
         filtered_used = bool(regions)
         retriever = get_hybrid_retriever(k=req.k, mmr=req.mmr, regions=regions if regions else None)
         docs: List[Document] = retriever.invoke(req.feature_text)
+        rerank_info: Dict[str, Any] = {"method": "disabled"}
+        try:
+            docs, rerank_info = rerank_with_info(req.feature_text, docs, top_k=req.k)
+        except Exception:
+            rerank_info = {"method": "error"}
         # Fallbacks: try each region solo, then drop filter entirely
         if not docs and regions:
             for r in regions:
@@ -117,6 +127,13 @@ def classify(req: ClassifyRequest):
             docs = retriever_any.invoke(req.feature_text)
             if docs:
                 filtered_used = False
+        # Final rerank on the chosen set (capture info if earlier failed)
+        if docs and (rerank_info.get("method") in {"disabled", "error"}):
+            try:
+                docs, rerank_info = rerank_with_info(req.feature_text, docs, top_k=req.k)
+            except Exception:
+                rerank_info = {"method": "error"}
+        t1 = time.perf_counter()
 
         # Post-filter safeguard: if we inferred regions but had to drop the store filter,
         # keep only matching regions from retrieved docs when possible.
@@ -162,11 +179,36 @@ def classify(req: ClassifyRequest):
             prov["retrieved_law_ids"] = ids
         prov.setdefault("regions_inferred", regions)
         prov.setdefault("region_filter_used", filtered_used)
+        # Metrics
+        metrics = prov.get("metrics", {}) or {}
+        metrics.update({
+            "elapsed_ms": int((t1 - t0) * 1000),
+            "k": req.k,
+            "mmr": bool(req.mmr),
+            "retrieved_count": len(docs),
+            "model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"),
+            "rerank": rerank_info,
+            "request_id": req_id,
+        })
+        prov["metrics"] = metrics
         # Confidence calibration
         out_conf = float(out.get("confidence", 0.5))
         rules_combined = prov.get("rules_hit", [])
         out["confidence"] = _calibrate_confidence(out_conf, rules_combined, regions, filtered_used)
         out["provenance"] = prov
+        # Append server-side inference log (best-effort)
+        try:
+            log_path = os.getenv("CLASSIFY_LOG_JSONL", "data/classify_log.jsonl")
+            append_jsonl(log_path, {
+                "ts": utc_now_iso(),
+                "request_id": req_id,
+                "feature_text": req.feature_text,
+                "rule_hits": req.rule_hits,
+                "regions": regions,
+                "response": out,
+            })
+        except Exception:
+            pass
         return ClassifyResponse(**out)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -177,6 +219,64 @@ def classify_auto(req: ClassifyAutoRequest):
     try:
         rules = auto_rule_hits(req.feature_text)
         return classify(ClassifyRequest(feature_text=req.feature_text, rule_hits=rules, k=req.k, mmr=req.mmr, regions=getattr(req, "regions", None)))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ---------- Feedback (review + logging) ----------
+@app.post("/feedback", response_model=FeedbackResponse)
+def feedback(req: FeedbackRequest):
+    try:
+        path = os.getenv("FEEDBACK_LOG_JSONL", "data/feedback.jsonl")
+        # Enforce one feedback per classification request
+        if not req.request_id:
+            raise HTTPException(status_code=400, detail="request_id is required for feedback")
+        if jsonl_has_record(path, "request_id", req.request_id):
+            raise HTTPException(status_code=409, detail="Feedback already recorded for this request_id")
+        saved = append_jsonl(path, {
+            "ts": utc_now_iso(),
+            "request_id": req.request_id,
+            "feature_text": req.feature_text,
+            "verdict": req.verdict,
+            "vote": req.vote,
+            "correction_needs_geo_logic": req.correction_needs_geo_logic,
+            "correction_reasoning": req.correction_reasoning,
+            "notes": req.notes,
+            "rules_input": req.rules_input,
+            "regions": req.regions,
+        })
+        return FeedbackResponse(ok=True, saved_path=saved)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/feedback/stats")
+def feedback_stats():
+    try:
+        import json
+        from pathlib import Path
+        path = os.getenv("FEEDBACK_LOG_JSONL", "data/feedback.jsonl")
+        p = Path(path)
+        if not p.exists():
+            p = (Path(__file__).resolve().parents[1] / path).resolve()
+        if not p.exists():
+            return {"total": 0, "by_vote": {}, "by_correction": {}}
+        by_vote: Dict[str, int] = {}
+        by_corr: Dict[str, int] = {}
+        total = 0
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                total += 1
+                try:
+                    rec = json.loads(line)
+                except Exception:
+                    continue
+                v = (rec.get("vote") or "").lower() or "unknown"
+                by_vote[v] = by_vote.get(v, 0) + 1
+                corr = (rec.get("correction_needs_geo_logic") or "none").lower()
+                by_corr[corr] = by_corr.get(corr, 0) + 1
+        return {"total": total, "by_vote": by_vote, "by_correction": by_corr}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
