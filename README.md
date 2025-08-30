@@ -50,8 +50,8 @@ TechJam/
 │ ├─ kb_chunks/ # Chunks (jsonl + meta.csv)
 │ └─ laws_manifest.csv # File→law→region mapping
 └─ web/ # Next.js frontend (App Router + Tailwind)
-  ├─ app/
-  └─ components/
+├─ app/
+└─ components/
 ```
 
 ---
@@ -145,38 +145,38 @@ npm run dev
 
 ```mermaid
 flowchart LR
-  subgraph FE[Frontend]
-    UI[Next.js]
-  end
+subgraph FE[Frontend]
+UI[Next.js]
+end
 
-  subgraph BE[Backend]
-    API[FastAPI]
-    LC[LangChain]
-    LLM[Groq Llama 3.1 8B]
-    CE[Cross Encoder]
-  end
+subgraph BE[Backend]
+API[FastAPI]
+LC[LangChain]
+LLM[Groq Llama 3.1 8B]
+CE[Cross Encoder]
+end
 
-  subgraph DB[Qdrant]
-    D[Dense BGE M3]
-    S[Sparse BM25]
-  end
+subgraph DB[Qdrant]
+D[Dense BGE M3]
+S[Sparse BM25]
+end
 
-  subgraph KB[Knowledge Base]
-    U[Upload]
-    P[Parse]
-    C[Chunk]
-    I[Index]
-  end
+subgraph KB[Knowledge Base]
+U[Upload]
+P[Parse]
+C[Chunk]
+I[Index]
+end
 
-  UI --> API --> LC
-  LC --> DB
-  DB --> D
-  DB --> S
-  LC --> CE
-  LC --> LLM
-  LLM --> API --> UI
+UI --> API --> LC
+LC --> DB
+DB --> D
+DB --> S
+LC --> CE
+LC --> LLM
+LLM --> API --> UI
 
-  U --> P --> C --> I --> DB
+U --> P --> C --> I --> DB
 ```
 
 ---

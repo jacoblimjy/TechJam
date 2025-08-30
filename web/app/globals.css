@@ -27,6 +27,9 @@ body {
 .btn {
   @apply px-4 py-2 rounded-xl border bg-slate-800/50 text-slate-100 border-white/10 backdrop-blur hover:shadow transition hover:bg-slate-700/50;
 }
+.btn-compact { /* align with .select sizing */
+  @apply px-2 py-1 text-sm;
+}
 .btn-outline {
   @apply px-4 py-2 rounded-xl border border-white/10 bg-transparent text-slate-100 hover:bg-slate-800/40 transition;
 }

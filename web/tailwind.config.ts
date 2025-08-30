@@ -22,6 +22,8 @@ export default {
       },
       backgroundImage: {
         'brand-gradient': "linear-gradient(135deg, #2e98ff 0%, #8b5cf6 50%, #06b6d4 100%)",
+        // Dark, slightly brighter gold gradient for title
+        'grand-title-dark': "linear-gradient(135deg, #c2410c 0%, #f59e0b 38%, #fbbf24 68%, #b45309 100%)",
       },
     },
   },
