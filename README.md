@@ -1,4 +1,3 @@
-Perfect — here’s everything consolidated in **Markdown**, ready for you to copy-paste into your GitHub README.
 
 ---
 
@@ -191,21 +190,3 @@ U --> P --> C --> I --> DB
 
 ---
 
-## 🧪 Demos
-
-* `/` — Paste feature → Analyze → JSON/CSV
-* `/search` — See raw law snippets (auditability)
-* `/demo` — What-if sandbox: “Assume region” override
-
----
-
-## 🛠 Troubleshooting
-
-* **Empty results**: ensure Qdrant running + collection exists.
-* **Region filters**: fallback to broader retrieval if no hits.
-* **Delete didn’t work**: retry; delete is idempotent.
-* **Full reindex**: drop collection, recreate, reindex.
-
----
-
-Do you want me to also add a **“Demo flow checklist”** (like a 1–2 min judge-friendly walkthrough you can read aloud during the presentation)?
