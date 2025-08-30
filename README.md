@@ -144,42 +144,39 @@ npm run dev
 ## 🧠 Architecture
 
 ```mermaid
-flowchart TD
-  subgraph Frontend
-    UI[Next.js + Tailwind]
+flowchart LR
+  subgraph FE[Frontend]
+    UI[Next.js]
   end
 
-  subgraph Backend
-    API[FastAPI API]
-    Chains[LangChain Chains]
-    LLM[Groq Llama-3.1-8B]
-    Rerank[Cross-Encoder Reranker]
+  subgraph BE[Backend]
+    API[FastAPI]
+    LC[LangChain]
+    LLM[Groq Llama 3.1 8B]
+    CE[Cross Encoder]
   end
 
-  subgraph VectorDB[Qdrant Hybrid Store]
-    Dense[BGE-M3 Dense]
-    Sparse[BM25 Sparse]
+  subgraph DB[Qdrant]
+    D[Dense BGE M3]
+    S[Sparse BM25]
   end
 
   subgraph KB[Knowledge Base]
-    Upload[PDF Upload]
-    Parse[docling / pypdf]
-    Chunk[Header-first Chunking]
-    Index[Index to Qdrant]
+    U[Upload]
+    P[Parse]
+    C[Chunk]
+    I[Index]
   end
 
-  %% Connections
-  UI --> API
-  API --> Chains
-  Chains --> VectorDB
-  VectorDB --> Dense
-  VectorDB --> Sparse
-  Chains --> Rerank
-  Chains --> LLM
-  LLM --> API
-  API --> UI
-  Upload --> Parse --> Chunk --> Index --> VectorDB
-  API --> Logs[JSONL Logs]
+  UI --> API --> LC
+  LC --> DB
+  DB --> D
+  DB --> S
+  LC --> CE
+  LC --> LLM
+  LLM --> API --> UI
+
+  U --> P --> C --> I --> DB
 ```
 
 ---
