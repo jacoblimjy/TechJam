@@ -1,6 +1,6 @@
-file_path,law_name,region,source
-California state law.txt,Protecting Our Kids from Social Media Addiction Act,US-CA,https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=202320240SB976
-EU Digital Service Act.txt,Digital Services Act,EU,https://eur-lex.europa.eu/eli/reg/2022/2065/oj
-Florida state law.txt,Online Protections for Minors,US-FL,https://www.flsenate.gov/Session/Bill/2024/3
-US law on reporting child sexual abuse content to NCMEC -.txt,18 U.S.C. § 2258A - Reporting requirements of providers,US,https://www.law.cornell.edu/uscode/text/18/2258A
-Utah state law.txt,Utah Social Media Regulation Act,US-UT,https://le.utah.gov/~2023/bills/static/SB0152.html
+file_path,law_name,region,source,article_or_section
+California state law.txt,Protecting Our Kids from Social Media Addiction Act,US-CA,https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=202320240SB976,
+EU Digital Service Act.txt,Digital Services Act,EU,https://eur-lex.europa.eu/eli/reg/2022/2065/oj,
+Florida state law.txt,Online Protections for Minors,US-FL,https://www.flsenate.gov/Session/Bill/2024/3,
+US law on reporting child sexual abuse content to NCMEC -.txt,18 U.S.C. § 2258A - Reporting requirements of providers,US,https://www.law.cornell.edu/uscode/text/18/2258A,
+Utah state law.txt,Utah Social Media Regulation Act,US-UT,https://le.utah.gov/~2023/bills/static/SB0152.html,

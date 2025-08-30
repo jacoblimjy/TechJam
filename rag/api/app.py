@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 import uuid
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.documents import Document
 from pathlib import Path
@@ -23,7 +23,10 @@ from api.schemas import (
     BatchClassifyAutoRequest,
     FeedbackRequest, FeedbackResponse,
 )
-from api.utils import rows_to_csv, append_jsonl, utc_now_iso, jsonl_has_record
+from api.utils import rows_to_csv, append_jsonl, utc_now_iso, jsonl_has_record, write_json
+from rag.config import get_config
+from rag.chunking import header_first_then_recursive
+from rag.qdrant_store import add_documents, delete_by_source_path, delete_by_source_paths
 
 load_dotenv()
 
@@ -93,6 +96,172 @@ def list_laws():
                     "article_or_section": r.get("article_or_section", ""),
                 })
         return {"laws": rows}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ---------- Laws upload (PDF → txt → manifest → chunk + index) ----------
+@app.post("/laws/upload")
+async def upload_law(
+    file: UploadFile = File(...),
+    law_name: str = Form(...),
+    region: str = Form(...),
+    source: str = Form(""),
+    article_or_section: str = Form(""),
+):
+    try:
+        if not file.filename.lower().endswith(".pdf"):
+            raise HTTPException(status_code=400, detail="Only PDF uploads are supported")
+
+        # 1) Save uploaded PDF to tmp
+        cfg = get_config()
+        tmp_dir = (Path(__file__).resolve().parents[1] / "data/tmp_uploads").resolve()
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+        pdf_path = tmp_dir / file.filename
+        content = await file.read()
+        pdf_path.write_bytes(content)
+
+        # 2) Extract text using docling if available, else fallback to pypdf
+        text = ""
+        try:
+            from docling.document_converter import DocumentConverter  # type: ignore
+            conv = DocumentConverter()
+            res = conv.convert(str(pdf_path))
+            text = getattr(res, "text", None) or getattr(res, "plaintext", None) or ""
+            if not text and hasattr(res, "document"):
+                try:
+                    text = res.document.export_to_text()
+                except Exception:
+                    pass
+        except Exception:
+            text = ""
+        if not text:
+            try:
+                from pypdf import PdfReader  # type: ignore
+                reader = PdfReader(str(pdf_path))
+                parts = []
+                for p in reader.pages:
+                    try:
+                        parts.append(p.extract_text() or "")
+                    except Exception:
+                        continue
+                text = "\n\n".join(parts).strip()
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"Failed to extract text: {e}")
+        if len(text.strip()) < 50:
+            raise HTTPException(status_code=400, detail="Parsed text seems empty or too short")
+
+        # 3) Save txt into kb_raw
+        safe_base = "".join(c if c.isalnum() or c in ("-","_"," ") else "_" for c in law_name).strip().replace(" ", "_")
+        if not safe_base:
+            safe_base = Path(file.filename).stem
+        txt_name = f"{safe_base}.txt"
+        kb_dir = (Path(__file__).resolve().parents[1] / cfg.raw_dir).resolve()
+        kb_dir.mkdir(parents=True, exist_ok=True)
+        txt_path = kb_dir / txt_name
+        txt_path.write_text(text, encoding="utf-8")
+
+        # 4) Update manifest CSV
+        manifest = os.getenv("MANIFEST_CSV", "data/laws_manifest.csv")
+        man_path = Path(manifest)
+        if not man_path.exists():
+            man_path = (Path(__file__).resolve().parents[1] / manifest).resolve()
+        write_header = not man_path.exists()
+        man_path.parent.mkdir(parents=True, exist_ok=True)
+        with man_path.open("a", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=["file_path","law_name","region","source","article_or_section"])
+            if write_header:
+                writer.writeheader()
+            writer.writerow({
+                "file_path": txt_name,
+                "law_name": law_name,
+                "region": region,
+                "source": source,
+                "article_or_section": article_or_section,
+            })
+
+        # 5) Chunk the text and index into Qdrant (only the new law)
+        content_with_header = f"## {law_name}\n\n{text.strip()}"
+        docs = header_first_then_recursive(
+            text=content_with_header,
+            source_path=str(txt_path),
+            headers=[("#","h1"),("##","h2"),("###","h3")],
+            max_header_chunk_chars=cfg.max_header_chunk_chars,
+            recursive_chunk_chars=cfg.recursive_chunk_chars,
+            recursive_overlap_chars=cfg.recursive_overlap_chars,
+            skip_reference_sections=cfg.skip_reference_sections,
+        )
+        for d in docs:
+            m = d.metadata
+            m.setdefault("law_name", law_name)
+            m.setdefault("region", region)
+            m.setdefault("source", source)
+            if article_or_section:
+                m.setdefault("article_or_section", article_or_section)
+        added = add_documents(docs)
+
+        return {
+            "ok": True,
+            "txt_file": str(txt_path.name),
+            "manifest": str(man_path),
+            "indexed_chunks": added,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ---------- Laws delete (remove txt + manifest row + index) ----------
+@app.post("/laws/delete")
+def delete_law(body: Dict[str, Any]):
+    try:
+        file_path = (body.get("file_path") or "").strip()
+        if not file_path:
+            raise HTTPException(status_code=400, detail="file_path is required")
+
+        # Resolve kb_raw absolute path
+        cfg = get_config()
+        kb_dir = (Path(__file__).resolve().parents[1] / cfg.raw_dir).resolve()
+        abs_txt = (kb_dir / file_path).resolve()
+
+        # 1) Delete from Qdrant by source_path (try common variants)
+        # Stored payload may be absolute or repo-relative depending on how it was indexed previously.
+        proj_root = Path(__file__).resolve().parents[1]
+        v1 = str(abs_txt)
+        v2 = str((Path(cfg.raw_dir) / file_path))  # e.g., data/kb_raw/file.txt
+        v3 = str((Path("rag") / Path(cfg.raw_dir) / file_path))  # e.g., rag/data/kb_raw/file.txt
+        variants = [v1, v2, v3]
+        deleted = delete_by_source_paths(variants)
+
+        # 2) Remove from manifest
+        manifest = os.getenv("MANIFEST_CSV", "data/laws_manifest.csv")
+        man_path = Path(manifest)
+        if not man_path.exists():
+            man_path = (Path(__file__).resolve().parents[1] / manifest).resolve()
+        kept_rows = []
+        if man_path.exists():
+            with man_path.open("r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for r in reader:
+                    if (r.get("file_path") or "").strip() != file_path:
+                        kept_rows.append(r)
+            with man_path.open("w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=["file_path","law_name","region","source","article_or_section"])
+                writer.writeheader()
+                for r in kept_rows:
+                    writer.writerow(r)
+
+        # 3) Remove the txt file
+        removed_file = False
+        try:
+            if abs_txt.exists():
+                abs_txt.unlink()
+                removed_file = True
+        except Exception:
+            pass
+
+        return {"ok": True, "deleted_points": deleted, "removed_file": removed_file, "manifest_rows": len(kept_rows)}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
