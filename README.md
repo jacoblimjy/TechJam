@@ -18,14 +18,16 @@ One-liner: Paste a product feature (title + description) → the system flags wh
 
 ## 📋 Features
 
-- ✅ **Automated compliance detection** for product features across multiple jurisdictions
-- ✅ **Multi-region legal analysis** (EU DSA, COPPA, US state laws, etc.)
-- ✅ **Hybrid search** combining dense (BGE-M3) + sparse (BM25) embeddings
-- ✅ **Cross-encoder reranking** for improved precision
-- ✅ **Audit-ready provenance** tracking with source citations
-- ✅ **Export capabilities** in JSON/CSV formats
-- ✅ **Interactive web interface** built with Next.js
-
+* ✅ **Automated compliance detection** for product features across multiple jurisdictions
+* ✅ **Multi-region legal analysis** (EU DSA, COPPA, US state laws, etc.)
+* ✅ **Self-serve law ingestion**: upload PDFs → **auto-parse, header-aware/recursive chunking, index to Qdrant**
+* ✅ **Hybrid search** combining dense (BGE-M3) + sparse (BM25) embeddings
+* ✅ **Cross-encoder reranking** for improved precision
+* ✅ **What-if region override** to compare outcomes across jurisdictions
+* ✅ **Feedback → few-shot memory** loop for continuous accuracy gains
+* ✅ **Audit-ready provenance** tracking with source citations
+* ✅ **Export** results in JSON/CSV formats (single & batch)
+* ✅ **Interactive web interface** built with Next.js
 ---
 
 ## ✅ Prerequisites
